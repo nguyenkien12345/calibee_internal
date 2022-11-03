@@ -52,7 +52,7 @@ const CustomerController = {
                 Contact_Name: name,
             };
             let data_customer_crm = await CustomerCRMCommon.onRegisterCRM(customer_crm, next);
-            let { code, data, error } = data_customer_crm;
+            let { code, data, error } = data_customer_crm.data;
             if (code === 3000 && data) {
                 return res.status(200).json({
                     ...successCallBack,
