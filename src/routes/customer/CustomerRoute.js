@@ -3,5 +3,7 @@ const CustomerController = require('../../controllers/customerController/Custome
 const security = require('../../middleware/security');
 
 CustomerRouter.get('/', security.verifySecurity, CustomerController.getAllCustomer);
+CustomerRouter.post('/register-crm', security.verifySecurity, CustomerController.registerCRM);
+CustomerRouter.get('/crm', security.verifySecurity, CustomerController.getAllCustomerCRM);
 
 module.exports = CustomerRouter;
