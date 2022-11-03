@@ -69,6 +69,10 @@ const Customer = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        app_id: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
