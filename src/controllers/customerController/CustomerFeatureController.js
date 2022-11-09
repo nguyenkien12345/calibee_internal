@@ -36,9 +36,7 @@ const Hepler = {
 
             console.log('data', data);
 
-            return {
-                data: data,
-            };
+            return data;
         } catch (err) {
             next(err);
         }
@@ -91,11 +89,10 @@ const CustomerFeatureController = {
                 App_ID: customer_id,
             };
 
-            console.log('data_booking_crm', data_booking_crm);
             console.log('CALL HELPER CREATE');
             let data_respone = await Hepler.onCreateBookingCRM(data_booking_crm, res, next);
             console.log('FINISH HELPER CREATE');
-            let { code, data } = data_respone;
+            let { code, data, error } = data_respone;
 
             if (code === 3000 && data) {
                 return res.status(200).json({
