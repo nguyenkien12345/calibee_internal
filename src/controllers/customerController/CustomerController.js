@@ -69,6 +69,13 @@ const CustomerController = {
             next(err);
         }
     },
+
+    updateCRM: async (req, res, next) => {
+        try {
+        } catch (err) {
+            next(err);
+        }
+    },
 };
 
 module.exports = CustomerController;
