@@ -81,6 +81,18 @@ const Workers = sequelize.define(
             type: DataTypes.STRING(100),
             allowNull: true,
         },
+        language_on_devices: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+        },
+        is_test: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        is_admin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     },
     {
         paranoid: true,
