@@ -1,5 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
+const bcrypt = require('bcrypt');
+const Bookings = require('../../models/customer/Booking');
+const CustomerCares = require('../../models/customer/CustomerCare');
 
 const Customer = sequelize.define(
     'customer',
@@ -81,6 +84,9 @@ const Customer = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        Customer_ID: {
+            type: DataTypes.STRING(100),
+        },
     },
     {
         paranoid: true,
@@ -88,5 +94,23 @@ const Customer = sequelize.define(
         collate: 'utf8mb4_general_ci',
     },
 );
+
+Customer.beforeCreate(async (customer) => {
+    if (customer.password) {
+        customer.password = await bcrypt.hash(customer.password, 10);
+    }
+});
+
+Customer.afterCreate(async (customer) => {
+    delete customer.dataValues.password;
+});
+
+Customer.prototype.verifyPassword = async function (password) {
+    return bcrypt.compareSync(password, this.password, (err) => {
+        if (err) {
+            console.log('verifyPassword -> error:', err);
+        }
+    });
+};
 
 module.exports = Customer;

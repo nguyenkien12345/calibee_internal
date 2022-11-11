@@ -1,7 +1,6 @@
 const Customers = require('../../models/customer/Customer');
 
 const CustomerCommon = {
-    // Get Customer by id
     onGetCustomerByID: async (customer_id, res, next) => {
         try {
             let customer = await Customers.findOne({
@@ -20,7 +19,6 @@ const CustomerCommon = {
         }
     },
 
-    // Get Customer by phone
     onGetCustomerByPhone: async (phone, res, next) => {
         try {
             let customer = await Customers.findOne({
@@ -39,7 +37,24 @@ const CustomerCommon = {
         }
     },
 
-    // Get all customers
+    onGetCustomerByEmail: async (email, res, next) => {
+        try {
+            let customer = await Customers.findOne({
+                where: {
+                    email: email,
+                },
+            }).catch((err) => res.json(error_db_querry(err)));
+
+            if (customer) {
+                return customer;
+            } else {
+                return null;
+            }
+        } catch (err) {
+            next(err);
+        }
+    },
+
     onGetCustomers: async () => {
         try {
             const customers = await Customers.findAll({

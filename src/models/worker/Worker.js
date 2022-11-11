@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
+const bcrypt = require('bcrypt');
 
 const Workers = sequelize.define(
     'worker',
@@ -93,6 +94,9 @@ const Workers = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        Worker_ID: {
+            type: DataTypes.STRING(100),
+        },
     },
     {
         paranoid: true,
@@ -100,5 +104,21 @@ const Workers = sequelize.define(
         collate: 'utf8mb4_general_ci',
     },
 );
+
+Workers.beforeCreate(async (workers) => {
+    workers.password = await bcrypt.hash(workers.password, 10);
+});
+
+Workers.afterCreate(async (workers) => {
+    delete workers.dataValues.password;
+});
+
+Workers.prototype.verifyPassword = async function (password) {
+    return bcrypt.compareSync(password, this.password, (err) => {
+        if (err) {
+            console.log('verifyPassword -> error:', err);
+        }
+    });
+};
 
 module.exports = Workers;

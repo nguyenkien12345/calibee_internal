@@ -1,7 +1,6 @@
 const Workers = require('../../models/worker/Worker');
 
 const WorkerCommon = {
-    // Get worker by id
     onGetWorkerByID: async (worker_id, res, next) => {
         try {
             let worker = await Workers.findOne({
@@ -20,7 +19,6 @@ const WorkerCommon = {
         }
     },
 
-    // Get worker by phone
     onGetWorkerByPhone: async (phone, res, next) => {
         try {
             let worker = await Workers.findOne({
@@ -39,7 +37,42 @@ const WorkerCommon = {
         }
     },
 
-    // Get all workers
+    onGetWorkerByNid: async (nid, res, next) => {
+        try {
+            let worker = await Workers.findOne({
+                where: {
+                    nid: nid,
+                },
+            }).catch((err) => res.json(error_db_querry(err)));
+
+            if (worker) {
+                return worker;
+            } else {
+                return null;
+            }
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    onGetWorkerByReferralCode: async (referral_code, res, next) => {
+        try {
+            let worker = await Workers.findOne({
+                where: {
+                    referral_code: referral_code,
+                },
+            }).catch((err) => res.json(error_db_querry(err)));
+
+            if (worker) {
+                return worker;
+            } else {
+                return null;
+            }
+        } catch (err) {
+            next(err);
+        }
+    },
+
     onGetWorkers: async () => {
         try {
             const workers = await Workers.findAll({
