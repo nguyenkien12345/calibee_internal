@@ -221,6 +221,9 @@ const BookingController = {
                 worker_id = worker.worker_id;
                 status = 2;
             }
+
+            booking_ids = service_type === 'Subscription' ? booking_ids : [booking_ids];
+            // Create a new booking detail
             const booking_detail = await Helper.onCreateBookingDetail(
                 booking_create.booking_id,
                 worker_id,
