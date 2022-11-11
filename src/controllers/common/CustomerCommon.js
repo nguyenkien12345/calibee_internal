@@ -19,6 +19,26 @@ const CustomerCommon = {
         }
     },
 
+    // Get Customer by id_crm
+    onGetCustomerByID_CRM: async (customer_id_crm, res, next) => {
+        try {
+            let customer = await Customers.findOne({
+                where: {
+                    app_id: customer_id_crm,
+                },
+            }).catch((err) => res.json(error_db_querry(err)));
+
+            if (customer) {
+                return customer;
+            } else {
+                return null;
+            }
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    // Get Customer by phone
     onGetCustomerByPhone: async (phone, res, next) => {
         try {
             let customer = await Customers.findOne({

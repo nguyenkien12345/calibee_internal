@@ -19,6 +19,26 @@ const WorkerCommon = {
         }
     },
 
+    // Get worker by id_crm
+    onGetWorkerByID_CRM: async (worker_id_crm, res, next) => {
+        try {
+            let worker = await Workers.findOne({
+                where: {
+                    app_id: worker_id_crm,
+                },
+            }).catch((err) => res.json(error_db_querry(err)));
+
+            if (worker) {
+                return worker;
+            } else {
+                return null;
+            }
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    // Get worker by phone
     onGetWorkerByPhone: async (phone, res, next) => {
         try {
             let worker = await Workers.findOne({
