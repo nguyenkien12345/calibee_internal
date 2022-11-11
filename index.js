@@ -10,6 +10,7 @@ const path = require('path');
 //import router
 const customerRoute = require('./src/routes/customer/CustomerRoute');
 const workerRoute = require('./src/routes/worker/WorkerRoute');
+const bookingRoute = require('./src/routes/booking/BookingRoute');
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use(cors());
 // router
 app.use('/v1/internal/customers', customerRoute);
 app.use('/v1/internal/workers', workerRoute);
+app.use('/v1/internal/bookings', bookingRoute);
 
 app.use((err, req, res, next) => {
     return res.status(500).json({
