@@ -145,7 +145,7 @@ const BookingController = {
                 payment_method,
                 worker_id,
                 booking_ids,
-                sale_oder_id,
+                sale_order_id,
             } = req.body;
 
             if (!customer_id) return res.status(400).json(error_missing_params('customer_id'));
@@ -158,7 +158,7 @@ const BookingController = {
             if (!worker_earnings) return res.status(400).json(error_missing_params('worker_earnings'));
             if (!total_payment) return res.status(400).json(error_missing_params('total_payment'));
             if (!payment_method) return res.status(400).json(error_missing_params('payment_method'));
-            if (!sale_oder_id) return res.status(400).json(error_missing_params('sale_oder_id'));
+            if (!sale_order_id) return res.status(400).json(error_missing_params('sale_order_id'));
 
             let customer = await CustomerCommon.onGetCustomerByID_CRM(customer_id);
             if (!customer) {
@@ -210,7 +210,7 @@ const BookingController = {
                 priority: 2,
                 time_key: JSON.stringify(time_key),
                 payment_method_id: payment_method === 'Cash' ? 5 : 6,
-                app_id: sale_oder_id,
+                app_id: sale_order_id,
             }).catch((err) => res.json(error_db_querry(err)));
 
             // Create a new booking detail
