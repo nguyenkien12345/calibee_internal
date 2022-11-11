@@ -91,6 +91,7 @@ const Helper = {
         total_job,
         total_time,
         booking_ids,
+        status,
         res,
         next,
     ) => {
@@ -116,6 +117,7 @@ const Helper = {
                 current_job: 1,
                 total_job,
                 app_ids: JSON.stringify(booking_ids),
+                status: status,
             }).catch((err) => res.json(error_db_querry(err)));
 
             return booking_detail;
@@ -210,9 +212,11 @@ const BookingController = {
 
             // Create a new booking detail
             let worker = null;
+            let status = 1;
             if (worker_id) {
                 worker = await WorkerCommon.onGetWorkerByID_CRM(worker_id, res, next);
                 worker_id = worker.worker_id;
+                status = 2;
             }
             const booking_detail = await Helper.onCreateBookingDetail(
                 booking_create.booking_id,
@@ -224,6 +228,7 @@ const BookingController = {
                 package,
                 working_time,
                 booking_ids,
+                status,
                 res,
                 next,
             );
