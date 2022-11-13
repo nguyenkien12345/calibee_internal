@@ -202,6 +202,7 @@ const WorkerController = {
                 is_verify: true,
                 avatar: '',
                 referral_code: referral_code,
+                Worker_ID: '',
             }).catch((err) => res.json(error_db_querry(err)));
             const new_access_token = AuthenHelper.generateAccessTokenWorker(worker.id, worker.phone);
 
