@@ -2,6 +2,8 @@ const dotenv = require('dotenv');
 const CustomerCommon = require('../common/CustomerCommon');
 const CustomerCRMCommon = require('../common/CustomerCRMCommon');
 const ServiceCommon = require('../common/ServiceCommon');
+const BookingCommon = require('../common/BookingCommon');
+const WorkerCommon = require('../common/WorkerCommon');
 const { successCallBack } = require('../../config/response/ResponseSuccess');
 const Bookings = require('../../models/booking/Booking');
 const BookingDetails = require('../../models/booking/BookingDetail');
@@ -13,7 +15,6 @@ const {
 } = require('../../config/response/ResponseError');
 const { getRefreshToken } = require('../../config/oauthCRM');
 const moment = require('moment');
-const WorkerCommon = require('../common/WorkerCommon');
 
 dotenv.config();
 
@@ -128,6 +129,7 @@ const Helper = {
 };
 
 const BookingController = {
+    // When Zoho create SaleOrder => save info to database
     saveInfoBookingFromCRM: async (req, res, next) => {
         try {
             let {
@@ -244,6 +246,45 @@ const BookingController = {
                 data: {
                     success: true,
                     booking_id: booking_create.booking_id,
+                },
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    // When Zoho assign Worker to Bookings => save worker_id and update status = 2 of booking_detail
+    assignWorkerFromCRM: async (req, res, next) => {
+        try {
+            let { sale_order_id, worker_id } = req.body;
+
+            if (!sale_order_id) return res.status(400).json(error_missing_params('sale_order_id'));
+            if (!worker_id) return res.status(400).json(error_missing_params('worker_id'));
+
+            let booking = await BookingCommon.onGetBookingByID_CRM(sale_order_id);
+            if (!booking) {
+                return res.json(onBuildResponseErr('error_not_found_booking'));
+            }
+
+            let booking_detail = await BookingCommon.onGetBookingDetailByBookingID(booking.booking_id);
+            if (!booking_detail) {
+                return res.json(onBuildResponseErr('error_not_found_booking_detail'));
+            }
+
+            let worker = await WorkerCommon.onGetWorkerByID_CRM(worker_id);
+            if (!worker) {
+                return res.json(onBuildResponseErr('error_not_found_worker'));
+            }
+
+            booking_detail.worker_id = worker.worker_id;
+            booking_status = 2;
+            await booking_detail.save();
+
+            return res.status(200).json({
+                ...successCallBack,
+                data: {
+                    success: true,
+                    booking_detail,
                 },
             });
         } catch (err) {
