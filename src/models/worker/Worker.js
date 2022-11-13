@@ -94,7 +94,7 @@ const Workers = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
-        Worker_ID_CRM: {
+        worker_id_crm: {
             type: DataTypes.STRING(100),
         },
     },
