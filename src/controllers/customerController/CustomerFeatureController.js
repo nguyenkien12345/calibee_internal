@@ -85,8 +85,8 @@ const CustomerFeatureController = {
                 Start_Date: start_day,
                 End_Date: end_day,
                 Location: location,
-                Sources: 'Mobile Application',
                 App_ID: customer_id,
+                Source: 'App',
             };
 
             console.log('CALL HELPER CREATE');

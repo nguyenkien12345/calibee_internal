@@ -7,6 +7,7 @@ const WorkerCommon = require('../common/WorkerCommon');
 const { successCallBack } = require('../../config/response/ResponseSuccess');
 const Bookings = require('../../models/booking/Booking');
 const BookingDetails = require('../../models/booking/BookingDetail');
+const Attendances = require('../../models/booking/Attendance');
 const fetch = require('node-fetch');
 const {
     errorCallBackWithOutParams,
@@ -277,7 +278,7 @@ const BookingController = {
             }
 
             booking_detail.worker_id = worker.worker_id;
-            booking_status = 2;
+            booking_detail.status = 2;
             await booking_detail.save();
 
             return res.status(200).json({
@@ -285,6 +286,77 @@ const BookingController = {
                 data: {
                     success: true,
                     booking_detail,
+                },
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    // When Zoho enter completed shift for worker => update status = 2 of attendance
+    completedShiftFromCRM: async (req, res, next) => {
+        try {
+            let { sale_order_id, booking_id } = req.body;
+
+            if (!sale_order_id) return res.status(400).json(error_missing_params('sale_order_id'));
+            if (!booking_id) return res.status(400).json(error_missing_params('worker_id'));
+
+            let booking = await BookingCommon.onGetBookingByID_CRM(sale_order_id);
+            if (!booking) {
+                return res.json(onBuildResponseErr('error_not_found_booking'));
+            }
+
+            let booking_detail = await BookingCommon.onGetBookingDetailByBookingID(booking.booking_id);
+            if (!booking_detail) {
+                return res.json(onBuildResponseErr('error_not_found_booking_detail'));
+            }
+
+            const basic = [1, 2, 3, 4];
+            const subscription = [5, 6];
+            let number_job = -1;
+            if (subscription.includes(booking.service_category_id)) {
+                let booking_ids = booking_detail.app_ids ? JSON.parse(booking_detail.app_ids) : [];
+
+                number_job = booking_ids.findIndex(booking_id);
+            }
+
+            let attendance = await Attendances.findOne({
+                where: {
+                    booking_detail_id: booking_detail.booking_detail_id,
+                    number_job: number_job,
+                },
+            });
+
+            if (attendance) {
+                if (!attendance.check_in) {
+                    attendance.check_in = moment('2022/11/14 ' + booking_detail.start_time).format('HH:mm:ss');
+                }
+                if (!attendance.check_out) {
+                    attendance.check_out = moment('2022/11/14 ' + booking_detail.start_time)
+                        .add(booking.total_time, 'hours')
+                        .format('HH:mm:ss');
+                }
+                attendance.status = 2;
+
+                await attendance.save();
+            } else {
+                attendance = await Attendances.create({
+                    booking_detail_id: booking_detail.booking_detail_id,
+                    working_day: moment().add(7, 'hours').format('YYYY-MM-DD'),
+                    check_in: moment('2022/11/14 ' + booking_detail.start_time).format('HH:mm:ss'),
+                    check_out: moment('2022/11/14 ' + booking_detail.start_time)
+                        .add(booking.total_time, 'hours')
+                        .format('HH:mm:ss'),
+                    status: 2,
+                    number_job: number_job,
+                });
+            }
+
+            return res.status(200).json({
+                ...successCallBack,
+                data: {
+                    success: true,
+                    attendance,
                 },
             });
         } catch (err) {

@@ -61,6 +61,10 @@ const BookingDetail = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: true,
         },
+        payment_status_details: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
