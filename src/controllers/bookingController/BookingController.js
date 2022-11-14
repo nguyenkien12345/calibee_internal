@@ -318,7 +318,16 @@ const BookingController = {
                 let booking_ids = booking_detail.app_ids ? JSON.parse(booking_detail.app_ids) : [];
 
                 number_job = booking_ids.findIndex(booking_id);
+
+                if (number_job === booking_detail.current_day) {
+                    booking_detail.status = 4;
+                } else {
+                    booking_detail.status = 3;
+                }
+            } else {
+                booking_detail.status = 4;
             }
+            await booking_detail.save();
 
             let attendance = await Attendances.findOne({
                 where: {
