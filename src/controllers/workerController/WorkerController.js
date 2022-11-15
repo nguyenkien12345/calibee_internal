@@ -56,7 +56,6 @@ const WorkerController = {
             if (!address) return res.status(400).json(error_missing_params('address'));
             if (!skills) return res.status(400).json(error_missing_params('skills'));
             if (!working_area) return res.status(400).json(error_missing_params('working_area'));
-            if (!working_place) return res.status(400).json(error_missing_params('working_place'));
             if (!worker_id) return res.status(400).json(error_missing_params('worker_id'));
 
             let cities_data = await CallAPICommon.getAllCities();
