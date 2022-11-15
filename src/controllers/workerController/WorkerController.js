@@ -89,6 +89,7 @@ const WorkerController = {
                 Registered_Works: Registered_Works,
                 City_Province: cityData.name,
                 App_ID: worker_id,
+                Worker_ID: nid,
             };
             let data_worker_crm = await WorkerCRMCommon.onRegisterCRM(worker_crm, next);
             let { code, data, error } = data_worker_crm.data;
