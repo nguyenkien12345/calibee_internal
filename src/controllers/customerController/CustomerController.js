@@ -112,7 +112,7 @@ const CustomerController = {
                 password: password,
                 app_id: app_id,
                 refresh_token: new_refresh_token,
-                Customer_ID_CRM: '',
+                customer_id_crm: '',
             }).catch((err) => res.json(error_db_querry(err)));
             const new_access_token = AuthenHelper.generateAccessToken(customer.id, customer.phone, customer.email);
 
