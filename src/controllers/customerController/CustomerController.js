@@ -80,6 +80,36 @@ const CustomerController = {
 
     updateCRM: async (req, res, next) => {
         try {
+            const zohoId = req.body.zohoId;
+            if (!zohoId) {
+                return res.status(400).json(error_missing_params('zohoId'));
+            }
+
+            const { name, province, address, email } = req.body;
+
+            let customer = await CustomerCRMCommon.onGetDetailCustomer(zohoId, res, next);
+            if (customer.data.code === 3100) {
+                return res.json(onBuildResponseErr('error_not_found_user'));
+            } else if (customer.data.code === 3000 && customer.data.data) {
+                let updatedCustomer = {
+                    Contact_Name: name ? name : customer.data.data.Contact_Name,
+                    City_Province: province ? province : customer.data.data.City_Province,
+                    Email: email ? email : customer.data.data.Email,
+                };
+                let data_customer_crm = await CustomerCRMCommon.onUpdateCRM(zohoId, updatedCustomer, next);
+                let { code, data, error } = data_customer_crm.data;
+                if (code === 3000 && data) {
+                    return res.status(200).json({
+                        ...successCallBack,
+                        data: data,
+                    });
+                } else {
+                    return res.json({
+                        ...errorCallBackWithOutParams,
+                        error: error,
+                    });
+                }
+            }
         } catch (err) {
             next(err);
         }
