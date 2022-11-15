@@ -57,6 +57,7 @@ const CustomerController = {
                 Mobile: phone.replace('0', '+84'),
                 Contact_Name: name,
                 App_ID: customer_id,
+                Customer_ID: '',
             };
             let data_customer_crm = await CustomerCRMCommon.onRegisterCRM(customer_crm, next);
             let { code, data, error } = data_customer_crm.data;
