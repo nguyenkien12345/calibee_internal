@@ -32,6 +32,29 @@ const CustomerCRMCommon = {
         }
     },
 
+    onGetDetailCustomer: async (zohoId, res, next) => {
+        try {
+            const url = `${base_url}/order-management/report/Sheet1_Report/${zohoId}`;
+            let accessToken = await getRefreshToken()
+                .then((data) => Promise.resolve(data))
+                .catch((err) => Promise.reject(err));
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Zoho-oauthtoken ${accessToken.access_token}`,
+                },
+            };
+            const response = await fetch(url, options);
+            const data = await response.json();
+            return {
+                data: data,
+            };
+        } catch (err) {
+            next(err);
+        }
+    },
+
     onRegisterCRM: async (customer, next) => {
         try {
             const url = `${base_url}/order-management/form/Contacts`;
