@@ -4,7 +4,7 @@ const CustomerFeatureController = require('../../controllers/customerController/
 const security = require('../../middleware/security');
 
 CustomerRouter.put('/update-crm', security.verifySecurity, CustomerController.updateCRM);
-CustomerRouter.post('/crm-register', security.verifySecurity, CustomerController.CRMregister);
+// CustomerRouter.post('/crm-register', security.verifySecurity, CustomerController.CRMregister);
 CustomerRouter.post('/register-crm', security.verifySecurity, CustomerController.registerCRM);
 CustomerRouter.get('/crm', security.verifySecurity, CustomerController.getAllCustomerCRM);
 CustomerRouter.post('/create-booking-crm', security.verifySecurity, CustomerFeatureController.createBooking);
