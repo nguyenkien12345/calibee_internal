@@ -127,9 +127,10 @@ const WorkerController = {
             if (worker.data.code === 3100) {
                 return res.json(onBuildResponseErr('error_not_found_user'));
             } else if (worker.data.code === 3000 && worker.data.data) {
+                working_area = cityData.name;
                 let updatedworker = {
                     Email: email ? email : worker.data.data.Email,
-                    City_Province: cityData.name ? cityData.name : worker.data.data.City_Province,
+                    City_Province: working_area ? working_area : worker.data.data.City_Province,
                 };
                 let data_worker_crm = await WorkerCRMCommon.onUpdateCRM(zohoId, updatedworker, next);
                 let { code, data, error } = data_worker_crm.data;
