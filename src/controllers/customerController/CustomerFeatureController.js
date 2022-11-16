@@ -50,7 +50,7 @@ const Hepler = {
 const CustomerFeatureController = {
     createBooking: async (req, res, next) => {
         try {
-            const {
+            let {
                 customer_id,
                 customer_id_crm,
                 worker_id_crm,
@@ -109,11 +109,14 @@ const CustomerFeatureController = {
                 data_booking_crm['Worker_ID'] = worker_id_crm;
             }
 
+            console.log('data_booking_crm', data_booking_crm);
+
             console.log('CALL HELPER CREATE');
             let data_respone = await Hepler.onCreateBookingCRM(data_booking_crm, res, next);
             console.log('FINISH HELPER CREATE');
             let { code, data, error } = data_respone;
 
+            console.log('data_respone', data_respone);
             if (code === 3000 && data) {
                 return res.status(200).json({
                     ...successCallBack,
