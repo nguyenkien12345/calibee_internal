@@ -306,6 +306,7 @@ const BookingController = {
             }
             console.log('Booking_ID', Booking_ID);
             if (Booking_ID) {
+                Booking_ID = JSON.parse(Booking_ID);
                 app_ids = JSON.stringify(Object.keys(Booking_ID));
                 zoho_ids = JSON.stringify(Object.values(Booking_ID));
                 console.log('app_ids', app_ids);
