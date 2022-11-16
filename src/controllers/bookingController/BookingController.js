@@ -372,6 +372,44 @@ const BookingController = {
             next(err);
         }
     },
+
+    // When Zoho confirmed booing => update status = 1 of booking_detail
+    confirmBookingFromCRM: async (req, res, next) => {
+        try {
+            let { sale_order_id, data } = req.body;
+
+            if (!sale_order_id) return res.status(400).json(error_missing_params('sale_order_id'));
+            if (!data) return res.status(400).json(error_missing_params('data'));
+
+            let booking = await BookingCommon.onGetBookingByID_CRM(sale_order_id);
+            if (!booking) {
+                return res.json(onBuildResponseErr('error_not_found_booking'));
+            }
+
+            let booking_detail = await BookingCommon.onGetBookingDetailByBookingID(booking.booking_id);
+            if (!booking_detail) {
+                return res.json(onBuildResponseErr('error_not_found_booking_detail'));
+            }
+
+            let app_ids = Object.keys(data);
+            let zoho_ids = Object.values(data);
+
+            booking_detail.app_ids = JSON.stringify(app_ids);
+            // booking_detail.zoho_ids = JSON.stringify(zoho_ids);
+            booking_detail.status = 1;
+            await booking_detail.save();
+
+            return res.status(200).json({
+                ...successCallBack,
+                data: {
+                    success: true,
+                    booking_detail,
+                },
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
 };
 
 module.exports = BookingController;
