@@ -57,6 +57,7 @@ const CustomerController = {
                 Mobile: phone.replace('0', '+84'),
                 Contact_Name: name,
                 App_ID: customer_id,
+                Customer_ID: '',
             };
             let data_customer_crm = await CustomerCRMCommon.onRegisterCRM(customer_crm, next);
             let { code, data, error } = data_customer_crm.data;
@@ -79,6 +80,36 @@ const CustomerController = {
 
     updateCRM: async (req, res, next) => {
         try {
+            const zohoId = req.body.zohoId;
+            if (!zohoId) {
+                return res.status(400).json(error_missing_params('zohoId'));
+            }
+
+            const { name, province, address, email } = req.body;
+
+            let customer = await CustomerCRMCommon.onGetDetailCustomer(zohoId, res, next);
+            if (customer.data.code === 3100) {
+                return res.json(onBuildResponseErr('error_not_found_user'));
+            } else if (customer.data.code === 3000 && customer.data.data) {
+                let updatedCustomer = {
+                    Contact_Name: name ? name : customer.data.data.Contact_Name,
+                    City_Province: province ? province : customer.data.data.City_Province,
+                    Email: email ? email : customer.data.data.Email,
+                };
+                let data_customer_crm = await CustomerCRMCommon.onUpdateCRM(zohoId, updatedCustomer, next);
+                let { code, data, error } = data_customer_crm.data;
+                if (code === 3000 && data) {
+                    return res.status(200).json({
+                        ...successCallBack,
+                        data: data,
+                    });
+                } else {
+                    return res.json({
+                        ...errorCallBackWithOutParams,
+                        error: error,
+                    });
+                }
+            }
         } catch (err) {
             next(err);
         }
@@ -112,7 +143,7 @@ const CustomerController = {
                 password: password,
                 app_id: app_id,
                 refresh_token: new_refresh_token,
-                Customer_ID_CRM: '',
+                customer_id_crm: '',
             }).catch((err) => res.json(error_db_querry(err)));
             const new_access_token = AuthenHelper.generateAccessToken(customer.id, customer.phone, customer.email);
 

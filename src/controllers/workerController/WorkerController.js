@@ -56,7 +56,6 @@ const WorkerController = {
             if (!address) return res.status(400).json(error_missing_params('address'));
             if (!skills) return res.status(400).json(error_missing_params('skills'));
             if (!working_area) return res.status(400).json(error_missing_params('working_area'));
-            if (!working_place) return res.status(400).json(error_missing_params('working_place'));
             if (!worker_id) return res.status(400).json(error_missing_params('worker_id'));
 
             let cities_data = await CallAPICommon.getAllCities();
@@ -89,6 +88,7 @@ const WorkerController = {
                 Registered_Works: Registered_Works,
                 City_Province: cityData.name,
                 App_ID: worker_id,
+                Worker_ID: nid,
             };
             let data_worker_crm = await WorkerCRMCommon.onRegisterCRM(worker_crm, next);
             let { code, data, error } = data_worker_crm.data;
@@ -202,7 +202,7 @@ const WorkerController = {
                 is_verify: true,
                 avatar: '',
                 referral_code: referral_code,
-                Worker_ID_CRM: '',
+                worker_id_crm: '',
             }).catch((err) => res.json(error_db_querry(err)));
             const new_access_token = AuthenHelper.generateAccessTokenWorker(worker.id, worker.phone);
 
