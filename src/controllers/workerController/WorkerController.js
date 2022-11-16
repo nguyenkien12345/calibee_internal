@@ -111,6 +111,35 @@ const WorkerController = {
 
     updateCRM: async (req, res, next) => {
         try {
+            const zohoId = req.body.zohoId;
+            if (!zohoId) {
+                return res.status(400).json(error_missing_params('zohoId'));
+            }
+
+            const { email, working_area } = req.body;
+
+            let worker = await WorkerCRMCommon.onGetDetailWorker(zohoId, res, next);
+            if (worker.data.code === 3100) {
+                return res.json(onBuildResponseErr('error_not_found_user'));
+            } else if (worker.data.code === 3000 && worker.data.data) {
+                let updatedworker = {
+                    Email: email ? email : worker.data.data.Email,
+                    City_Province: working_area ? working_area : worker.data.data.City_Province,
+                };
+                let data_worker_crm = await WorkerCRMCommon.onUpdateCRM(zohoId, updatedworker, next);
+                let { code, data, error } = data_worker_crm.data;
+                if (code === 3000 && data) {
+                    return res.status(200).json({
+                        ...successCallBack,
+                        data: data,
+                    });
+                } else {
+                    return res.json({
+                        ...errorCallBackWithOutParams,
+                        error: error,
+                    });
+                }
+            }
         } catch (err) {
             next(err);
         }
