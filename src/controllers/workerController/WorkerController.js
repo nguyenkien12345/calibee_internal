@@ -116,7 +116,7 @@ const WorkerController = {
                 return res.status(400).json(error_missing_params('zohoId'));
             }
 
-            const { email, working_area } = req.body;
+            let { email, working_area } = req.body;
 
             let cities_data = await CallAPICommon.getAllCities();
             let result_cities = [];
