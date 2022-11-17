@@ -26,13 +26,13 @@ const Helper = {
         try {
             // Cal days
             const days_week = {
-                Monday: 2,
-                Tuesday: 3,
-                Wednesday: 4,
-                Thursday: 5,
-                Friday: 6,
-                Saturday: 7,
-                Sunday: 8,
+                Mon: 2,
+                Tue: 3,
+                Wed: 4,
+                Thu: 5,
+                Fri: 6,
+                Sat: 7,
+                Sun: 8,
             };
             let time_key = [];
             let days_tmp = null;
@@ -94,6 +94,8 @@ const Helper = {
         total_time,
         booking_ids,
         status,
+        app_ids,
+        booking_id_crm,
         res,
         next,
     ) => {
@@ -120,6 +122,8 @@ const Helper = {
                 total_job,
                 app_ids: JSON.stringify(booking_ids),
                 status: status,
+                app_ids: app_ids,
+                booking_id_crm: booking_id_crm,
             }).catch((err) => res.json(error_db_querry(err)));
 
             return booking_detail;
@@ -161,6 +165,7 @@ const BookingController = {
             if (!worker_earnings) return res.status(400).json(error_missing_params('worker_earnings'));
             if (!total_payment) return res.status(400).json(error_missing_params('total_payment'));
             if (!payment_method) return res.status(400).json(error_missing_params('payment_method'));
+            if (!booking_ids) return res.status(400).json(error_missing_params('booking_ids'));
             if (!sale_order_id) return res.status(400).json(error_missing_params('sale_order_id'));
 
             let customer = await CustomerCommon.onGetCustomerByID_CRM(customer_id);
@@ -183,7 +188,18 @@ const BookingController = {
                 end_day = tmp[1] + '/' + tmp[0] + '/' + tmp[2];
             }
 
-            let package = service_type === 'Subscription' && booking_ids ? booking_ids.length : 1;
+            // Sale_Order_ID
+            let bookig_id = JSON.parse(sale_order_id);
+            //let bookig_id = sale_order_id;
+            let app_ids_booking = Object.keys(bookig_id);
+            let zoho_ids_booking = Object.values(bookig_id);
+
+            let booking_detail_ids = JSON.parse(booking_ids);
+            //let booking_detail_ids = booking_ids;
+            let app_ids_booking_detail = JSON.stringify(Object.keys(booking_detail_ids));
+            let zoho_ids_booking_detail = JSON.stringify(Object.values(booking_detail_ids));
+
+            let package = service_type === 'Subscription' && booking_ids ? app_ids_booking_detail.length : 1;
             let { days_tmp, time_key } = Helper.onBeforeSaveInfoBookingCRM(
                 days,
                 start_day,
@@ -213,7 +229,8 @@ const BookingController = {
                 priority: 2,
                 time_key: JSON.stringify(time_key),
                 payment_method_id: payment_method === 'Cash' ? 5 : 6,
-                app_id: sale_order_id,
+                app_id: app_ids_booking[0],
+                booking_id_crm: zoho_ids_booking[0],
             }).catch((err) => res.json(error_db_querry(err)));
 
             // Create a new booking detail
@@ -225,7 +242,6 @@ const BookingController = {
                 status = 2;
             }
 
-            booking_ids = service_type === 'Subscription' ? booking_ids : [booking_ids];
             // Create a new booking detail
             const booking_detail = await Helper.onCreateBookingDetail(
                 booking_create.booking_id,
@@ -238,6 +254,8 @@ const BookingController = {
                 working_time,
                 booking_ids,
                 status,
+                app_ids_booking_detail,
+                zoho_ids_booking_detail,
                 res,
                 next,
             );
@@ -246,7 +264,8 @@ const BookingController = {
                 ...successCallBack,
                 data: {
                     success: true,
-                    booking_id: booking_create.booking_id,
+                    booking_create: booking_create,
+                    booking_detail: booking_detail,
                 },
             });
         } catch (err) {
