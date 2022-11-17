@@ -6,5 +6,6 @@ BookingRouter.post('/save-info-booking-crm', security.verifySecurity, BookingCon
 BookingRouter.put('/update-info-booking-crm', security.verifySecurity, BookingController.updateInfoBookingFromCRM);
 BookingRouter.put('/assign-worker-booking-from-crm', security.verifySecurity, BookingController.assignWorkerFromCRM);
 BookingRouter.post('/completed-shift-from-crm', security.verifySecurity, BookingController.completedShiftFromCRM);
+BookingRouter.get('/booking-from-crm', security.verifySecurity, BookingController.getBookingFromCRM);
 
 module.exports = BookingRouter;

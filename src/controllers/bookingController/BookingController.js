@@ -334,83 +334,124 @@ const BookingController = {
         }
     },
 
-    // // Update info booking to Zoho
-    // updateInfoBookingFromCRM: async (req, res, next) => {
-    //     try {
-    //         let { Sale_Order_ID, Status, Booking_ID } = req.body;
+    // Update info booking to Zoho
+    updateInfoBookingToCRM: async (req, res, next) => {
+        try {
+            let { Sale_Order_ID, Status, Booking_ID } = req.body;
 
-    //         if (!Sale_Order_ID) return res.status(400).json(error_missing_params('Sale_Order_ID'));
+            if (!Sale_Order_ID) return res.status(400).json(error_missing_params('Sale_Order_ID'));
 
-    //         let booking = await BookingCommon.onGetBookingByID_CRM(Sale_Order_ID);
-    //         if (!booking) {
-    //             return res.json(onBuildResponseErr('error_not_found_booking'));
-    //         }
+            let booking = await BookingCommon.onGetBookingByID_CRM(Sale_Order_ID);
+            if (!booking) {
+                return res.json(onBuildResponseErr('error_not_found_booking'));
+            }
 
-    //         let booking_detail = await BookingCommon.onGetBookingDetailByBookingID(booking.booking_id);
-    //         if (!booking_detail) {
-    //             return res.json(onBuildResponseErr('error_not_found_booking_detail'));
-    //         }
+            let booking_detail = await BookingCommon.onGetBookingDetailByBookingID(booking.booking_id);
+            if (!booking_detail) {
+                return res.json(onBuildResponseErr('error_not_found_booking_detail'));
+            }
 
-    //         let status_booking = booking_detail.status;
-    //         let app_ids = booking_detail.app_ids;
-    //         let zoho_ids = booking_detail.booking_id_crm;
+            let status_booking = booking_detail.status;
+            let app_ids = booking_detail.app_ids;
+            let zoho_ids = booking_detail.booking_id_crm;
 
-    //         Order_ID = !Order_ID ? booking.booking_id_crm : Order_ID;
-    //         if (Status) {
-    //             switch (Status) {
-    //                 case 'Draft': {
-    //                     status_booking = 0;
-    //                     break;
-    //                 }
-    //                 case 'Confirmed': {
-    //                     status_booking = 1;
-    //                     break;
-    //                 }
-    //                 case 'Received': {
-    //                     status_booking = 2;
-    //                     break;
-    //                 }
-    //                 case 'Processing': {
-    //                     status_booking = 3;
-    //                     break;
-    //                 }
-    //                 case 'Completed': {
-    //                     status_booking = 4;
-    //                     break;
-    //                 }
-    //                 case 'Canceled': {
-    //                     status_booking = 5;
-    //                     break;
-    //                 }
-    //             }
-    //         }
-    //         console.log('Booking_ID', Booking_ID);
-    //         if (Booking_ID) {
-    //             app_ids = JSON.stringify(Object.keys(Booking_ID));
-    //             zoho_ids = JSON.stringify(Object.values(Booking_ID));
-    //             console.log('app_ids', app_ids);
-    //         }
+            Order_ID = !Order_ID ? booking.booking_id_crm : Order_ID;
+            if (Status) {
+                switch (Status) {
+                    case 'Draft': {
+                        status_booking = 0;
+                        break;
+                    }
+                    case 'Confirmed': {
+                        status_booking = 1;
+                        break;
+                    }
+                    case 'Received': {
+                        status_booking = 2;
+                        break;
+                    }
+                    case 'Processing': {
+                        status_booking = 3;
+                        break;
+                    }
+                    case 'Completed': {
+                        status_booking = 4;
+                        break;
+                    }
+                    case 'Canceled': {
+                        status_booking = 5;
+                        break;
+                    }
+                }
+            }
+            console.log('Booking_ID', Booking_ID);
+            if (Booking_ID) {
+                app_ids = JSON.stringify(Object.keys(Booking_ID));
+                zoho_ids = JSON.stringify(Object.values(Booking_ID));
+                console.log('app_ids', app_ids);
+            }
 
-    //         // Save info booking
-    //         booking.booking_id_crm = Order_ID;
-    //         await booking.save();
-    //         booking_detail.app_ids = app_ids;
-    //         booking_detail.booking_id_crm = zoho_ids;
-    //         booking_detail.status = status_booking;
-    //         await booking_detail.save();
+            // Save info booking
+            booking.booking_id_crm = Order_ID;
+            await booking.save();
+            booking_detail.app_ids = app_ids;
+            booking_detail.booking_id_crm = zoho_ids;
+            booking_detail.status = status_booking;
+            await booking_detail.save();
 
-    //         return res.status(200).json({
-    //             ...successCallBack,
-    //             data: {
-    //                 success: true,
-    //                 booking,
-    //                 booking_detail,
-    //             },
-    //         });
-    //     } catch (err) {
-    //         next(err);
-    //     }
-    // },
+            return res.status(200).json({
+                ...successCallBack,
+                data: {
+                    success: true,
+                    booking,
+                    booking_detail,
+                },
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    // Get A Booking In Zoho
+    getBookingFromCRM: async (req, res, next) => {
+        try {
+            let { booking_id } = req.query;
+
+            if (!booking_id) return res.status(400).json(error_missing_params('booking_id'));
+
+            console.log('IN HELPER CREATE');
+            const url = `${base_url}/order-management/report/All_Orders/${booking_id}`;
+            let accessToken = await getRefreshToken()
+                .then((data) => Promise.resolve(data))
+                .catch((err) => Promise.reject(err));
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Zoho-oauthtoken ${accessToken.access_token}`,
+                },
+            };
+            console.log('END HELPER CREATE');
+            const response = await fetch(url, options);
+            const data_response = await response.json();
+
+            let { code, data, error } = data_response;
+
+            if (code === 3000 && data) {
+                return res.status(200).json({
+                    ...successCallBack,
+                    data: data,
+                });
+            } else {
+                return res.json({
+                    ...errorCallBackWithOutParams,
+                    error: error,
+                });
+            }
+        } catch (err) {
+            next(err);
+        }
+    },
 
     // When Zoho assign Worker to Bookings => save worker_id and update status = 2 of booking_detail
     assignWorkerFromCRM: async (req, res, next) => {
