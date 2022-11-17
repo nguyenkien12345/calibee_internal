@@ -116,12 +116,18 @@ const WorkerController = {
                 return res.status(400).json(error_missing_params('zohoId'));
             }
 
-            const { email, working_area } = req.body;
+            let { email, working_area } = req.body;
+
+            let cities_data = await CallAPICommon.getAllCities();
+            let result_cities = [];
+            result_cities = JSON.parse(cities_data.data).data.cities;
+            let cityData = result_cities.find((x) => x.city_id.toString() === working_area.toString());
 
             let worker = await WorkerCRMCommon.onGetDetailWorker(zohoId, res, next);
             if (worker.data.code === 3100) {
                 return res.json(onBuildResponseErr('error_not_found_user'));
             } else if (worker.data.code === 3000 && worker.data.data) {
+                working_area = cityData.name;
                 let updatedworker = {
                     Email: email ? email : worker.data.data.Email,
                     City_Province: working_area ? working_area : worker.data.data.City_Province,
