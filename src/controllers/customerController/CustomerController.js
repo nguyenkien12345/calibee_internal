@@ -79,6 +79,23 @@ const CustomerController = {
         }
     },
 
+    registerCRMMany: async (req, res, next) => {
+        try {
+            let customersNotRegister = await CustomerCRMCommon.onGetAllCustomerNotRegisterCRM(req, res, next);
+            for (let i = 0; i < customersNotRegister.length; i++) {
+                await CustomerCRMCommon.onHandleRegisterCRM(
+                    customersNotRegister[i].name,
+                    customersNotRegister[i].email,
+                    customersNotRegister[i].phone,
+                    customersNotRegister[i].customer_id,
+                    next,
+                );
+            }
+        } catch (err) {
+            next(err);
+        }
+    },
+
     updateCRM: async (req, res, next) => {
         try {
             const zohoId = req.body.zohoId;
@@ -115,54 +132,6 @@ const CustomerController = {
             next(err);
         }
     },
-
-    // CRMregister: async (req, res, next) => {
-    //     try {
-    //         const { name, email, phone, password, app_id } = req.body;
-
-    //         if (!name) return res.status(400).json(error_missing_params('name'));
-    //         if (!email) return res.status(400).json(error_missing_params('email'));
-    //         if (!phone) return res.status(400).json(error_missing_params('phone'));
-    //         if (!password) return res.status(400).json(error_missing_params('password'));
-    //         if (!app_id) return res.status(400).json(error_missing_params('app_id'));
-
-    //         let is_exists_phone = await CustomerCommon.onGetCustomerByPhone(phone, res, next);
-    //         if (is_exists_phone) {
-    //             return res.json(onBuildResponseErr('error_exist_phone'));
-    //         }
-
-    //         let is_exists_email = await CustomerCommon.onGetCustomerByEmail(email, res, next);
-    //         if (is_exists_email) {
-    //             return res.json(onBuildResponseErr('error_exist_email'));
-    //         }
-
-    //         const new_refresh_token = AuthenHelper.generateRefreshToken(phone, email);
-    //         let customer = await Customers.create({
-    //             name: name,
-    //             email: email,
-    //             phone: phone.replace('+84', '0'),
-    //             password: password,
-    //             app_id: app_id,
-    //             refresh_token: new_refresh_token,
-    //             customer_id_crm: '',
-    //         }).catch((err) => res.json(error_db_querry(err)));
-    //         const new_access_token = AuthenHelper.generateAccessToken(customer.id, customer.phone, customer.email);
-
-    //         let { password: password_user, createdAt, updatedAt, ...other } = customer.dataValues;
-
-    //         return res.status(201).json({
-    //             ...successCallBack,
-    //             data: {
-    //                 success: true,
-    //                 access_token: new_access_token,
-    //                 refresh_token: new_refresh_token,
-    //                 user: { ...other },
-    //             },
-    //         });
-    //     } catch (err) {
-    //         next(err);
-    //     }
-    // },
 };
 
 module.exports = CustomerController;

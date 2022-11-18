@@ -1,8 +1,10 @@
 const dotenv = require('dotenv');
 const fetch = require('node-fetch');
+const Customers = require('../../models/customer/Customer');
 const { successCallBack } = require('../../config/response/ResponseSuccess');
 const { errorCallBackWithOutParams } = require('../../config/response/ResponseError');
 const { getRefreshToken } = require('../../config/oauthCRM');
+const { where } = require('sequelize');
 
 dotenv.config();
 
@@ -27,6 +29,22 @@ const CustomerCRMCommon = {
             return {
                 data: data,
             };
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    onGetAllCustomerNotRegisterCRM: async (req, res, next) => {
+        try {
+            const customers = await Customers.findAll({
+                where: {
+                    app_id: null,
+                    customer_id_crm: null,
+                },
+                raw: true,
+            }).catch((err) => res.json(error_db_querry(err)));
+
+            return customers;
         } catch (err) {
             next(err);
         }
@@ -78,6 +96,33 @@ const CustomerCRMCommon = {
             return {
                 data: data,
             };
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    onHandleRegisterCRM: async (name, email, phone, customer_id, next) => {
+        try {
+            if (!name) return res.status(400).json(error_missing_params('name'));
+            if (!email) return res.status(400).json(error_missing_params('email'));
+            if (!phone) return res.status(400).json(error_missing_params('phone'));
+            if (!customer_id) return res.status(400).json(error_missing_params('customer_id'));
+
+            let customer_crm = {
+                Email: email,
+                Mobile: phone.replace('0', '+84'),
+                Contact_Name: name,
+                App_ID: customer_id,
+                Source: 'App',
+                Customer_ID: '',
+            };
+            let data_customer_crm = await CustomerCRMCommon.onRegisterCRM(customer_crm, next);
+            let { code, data, error } = data_customer_crm.data;
+            if (code === 3000 && data) {
+                return true;
+            } else {
+                return false;
+            }
         } catch (err) {
             next(err);
         }
