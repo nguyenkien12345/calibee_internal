@@ -136,7 +136,7 @@ const Helper = {
     onUpdateSaleOrderCRM: async (sale_order_id, data_update, next) => {
         try {
             console.log('IN HELPER UPDATE BOOKING');
-            const url = `${base_url}/order-management/report/All_Orders/${sale_order_id}`;
+            const url = `${base_url}/copy-of-calibee-order-management/report/All_Orders/${sale_order_id}`;
             let accessToken = await getRefreshToken()
                 .then((data) => Promise.resolve(data))
                 .catch((err) => Promise.reject(err));
@@ -168,7 +168,7 @@ const Helper = {
     onUpdateBookingCRM: async (booking_id, data_update, next) => {
         try {
             console.log('IN HELPER UPDATE BOOKING');
-            const url = `${base_url}/order-management/report/All_Bookings/${booking_id}`;
+            const url = `${base_url}/copy-of-calibee-order-management/report/All_Bookings/${booking_id}`;
             let accessToken = await getRefreshToken()
                 .then((data) => Promise.resolve(data))
                 .catch((err) => Promise.reject(err));
