@@ -465,7 +465,7 @@ const BookingController = {
             if (!booking_id) return res.status(400).json(error_missing_params('booking_id'));
 
             console.log('IN HELPER CREATE');
-            const url = `${base_url}/order-management/report/All_Orders/${booking_id}`;
+            const url = `${base_url}/om-sandbox/report/All_Orders/${booking_id}`;
             let accessToken = await getRefreshToken()
                 .then((data) => Promise.resolve(data))
                 .catch((err) => Promise.reject(err));

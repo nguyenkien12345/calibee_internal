@@ -34,6 +34,10 @@ const Attendance = sequelize.define(
             defaultValue: -1,
             allowNull: true,
         },
+        active_cron: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+        },
     },
     {
         charset: 'utf8mb4',

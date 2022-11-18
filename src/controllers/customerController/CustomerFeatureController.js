@@ -96,7 +96,7 @@ const CustomerFeatureController = {
                 App_ID: customer_id,
                 Item_Rates_Are: 'Tax Inclusive',
                 Source: 'App',
-                Product_Code_Name: product_code_name ? product_code_name : 'O_Basic_079_I_P3h',
+                Product_Code_Name: product_code_name ? product_code_name : 'O_Basic_079_II_P3h',
             };
             // Set Start_Date and End_Date
             if (basic_services.includes(service_category_id)) {
