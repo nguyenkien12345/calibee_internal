@@ -3,6 +3,7 @@ const CustomerController = require('../../controllers/customerController/Custome
 const CustomerFeatureController = require('../../controllers/customerController/CustomerFeatureController');
 const security = require('../../middleware/security');
 
+CustomerRouter.put('/update-app-id', security.verifySecurity, CustomerController.updateAppId);
 CustomerRouter.put('/update-crm', security.verifySecurity, CustomerController.updateCRM);
 // CustomerRouter.post('/crm-register', security.verifySecurity, CustomerController.CRMregister);
 CustomerRouter.post('/register-crm', security.verifySecurity, CustomerController.registerCRM);

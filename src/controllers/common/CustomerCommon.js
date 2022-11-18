@@ -1,4 +1,5 @@
 const Customers = require('../../models/customer/Customer');
+const { error_missing_params, error_db_querry } = require('../../config/response/ResponseError');
 
 const CustomerCommon = {
     onGetCustomerByID: async (customer_id, res, next) => {
@@ -19,7 +20,6 @@ const CustomerCommon = {
         }
     },
 
-    // Get Customer by id_crm
     onGetCustomerByID_CRM: async (customer_id_crm, res, next) => {
         try {
             let customer = await Customers.findOne({
@@ -38,7 +38,24 @@ const CustomerCommon = {
         }
     },
 
-    // Get Customer by phone
+    onGetCustomerByCustomer_ID_CRM: async (customer_id_crm, res, next) => {
+        try {
+            let customer = await Customers.findOne({
+                where: {
+                    customer_id_crm: customer_id_crm,
+                },
+            }).catch((err) => res.json(error_db_querry(err)));
+
+            if (customer) {
+                return customer;
+            } else {
+                return null;
+            }
+        } catch (err) {
+            next(err);
+        }
+    },
+
     onGetCustomerByPhone: async (phone, res, next) => {
         try {
             let customer = await Customers.findOne({

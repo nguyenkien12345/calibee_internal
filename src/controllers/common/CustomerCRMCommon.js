@@ -1,10 +1,8 @@
 const dotenv = require('dotenv');
 const fetch = require('node-fetch');
 const Customers = require('../../models/customer/Customer');
-const { successCallBack } = require('../../config/response/ResponseSuccess');
-const { errorCallBackWithOutParams } = require('../../config/response/ResponseError');
 const { getRefreshToken } = require('../../config/oauthCRM');
-const { where } = require('sequelize');
+const { error_missing_params, error_db_querry } = require('../../config/response/ResponseError');
 
 dotenv.config();
 
@@ -41,7 +39,6 @@ const CustomerCRMCommon = {
                     app_id: null,
                     customer_id_crm: null,
                 },
-                raw: true,
             }).catch((err) => res.json(error_db_querry(err)));
 
             return customers;
@@ -141,6 +138,29 @@ const CustomerCRMCommon = {
                         ...customer,
                     },
                 }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Zoho-oauthtoken ${accessToken.access_token}`,
+                },
+            };
+            const response = await fetch(url, options);
+            const data = await response.json();
+            return {
+                data: data,
+            };
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    onSearchByCustomerId: async (Customer_ID, next) => {
+        try {
+            const url = `${base_url}/order-management/report/Sheet1_Report?Customer_ID=${Customer_ID}`;
+            let accessToken = await getRefreshToken()
+                .then((data) => Promise.resolve(data))
+                .catch((err) => Promise.reject(err));
+            const options = {
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Zoho-oauthtoken ${accessToken.access_token}`,

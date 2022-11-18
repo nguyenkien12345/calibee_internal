@@ -132,6 +132,39 @@ const CustomerController = {
             next(err);
         }
     },
+
+    updateAppId: async (req, res, next) => {
+        try {
+            const Customer_ID = req.body.Customer_ID;
+
+            if (!Customer_ID) {
+                return res.status(400).json(error_missing_params('Customer_ID'));
+            }
+
+            let customer = await CustomerCRMCommon.onSearchByCustomerId(Customer_ID, next);
+            if (customer.data.code === 3100) {
+                return res.json(onBuildResponseErr('error_not_found_user'));
+            } else if (customer.data.code === 3000 && customer.data.data) {
+                let customer_updated = await CustomerCommon.onGetCustomerByCustomer_ID_CRM(
+                    customer.data.data[0].Customer_ID,
+                    res,
+                    next,
+                );
+                customer_updated.app_id = customer.data.data[0].ID;
+                await customer_updated
+                    .save()
+                    .then((data) =>
+                        res.status(201).json({
+                            ...successCallBack,
+                            data: data,
+                        }),
+                    )
+                    .catch((err) => res.json(error_db_querry(err)));
+            }
+        } catch (err) {
+            next(err);
+        }
+    },
 };
 
 module.exports = CustomerController;
