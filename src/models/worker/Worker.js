@@ -97,6 +97,10 @@ const Workers = sequelize.define(
         worker_id_crm: {
             type: DataTypes.STRING(100),
         },
+        is_zoho_test: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     },
     {
         paranoid: true,
