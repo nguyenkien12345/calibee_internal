@@ -420,11 +420,10 @@ const BookingController = {
     // Update info booking to Zoho
     updateInfoBookingToCRM: async (req, res, next) => {
         try {
-            let { Sale_Order_ID, Booking_ID, Status, Worker_ID } = req.body;
+            let { Sale_Order_ID, Booking_ID, Worker_ID } = req.body;
 
             if (!Sale_Order_ID) return res.status(400).json(error_missing_params('Sale_Order_ID'));
             if (!Booking_ID) return res.status(400).json(error_missing_params('Booking_ID'));
-            if (!Status) return res.status(400).json(error_missing_params('Status'));
 
             // Update Sale_Order
             if (Worker_ID) {
