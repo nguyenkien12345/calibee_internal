@@ -131,6 +131,70 @@ const Helper = {
             next(err);
         }
     },
+
+    // Function update Sale_Order
+    onUpdateSaleOrderCRM: async (sale_order_id, data_update, next) => {
+        try {
+            console.log('IN HELPER UPDATE BOOKING');
+            const url = `${base_url}/order-management/report/All_Orders/${sale_order_id}`;
+            let accessToken = await getRefreshToken()
+                .then((data) => Promise.resolve(data))
+                .catch((err) => Promise.reject(err));
+            const options = {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    data: {
+                        ...data_update,
+                    },
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Zoho-oauthtoken ${accessToken.access_token}`,
+                },
+            };
+            console.log('END HELPER CREATE');
+            const response = await fetch(url, options);
+            const data = await response.json();
+
+            console.log('data', data);
+
+            return data;
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    // Function update Sale_Order
+    onUpdateBookingCRM: async (booking_id, data_update, next) => {
+        try {
+            console.log('IN HELPER UPDATE BOOKING');
+            const url = `${base_url}/order-management/report/All_Bookings/${booking_id}`;
+            let accessToken = await getRefreshToken()
+                .then((data) => Promise.resolve(data))
+                .catch((err) => Promise.reject(err));
+            const options = {
+                method: 'PATCH',
+                body: JSON.stringify({
+                    data: {
+                        ...data_update,
+                    },
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Zoho-oauthtoken ${accessToken.access_token}`,
+                },
+            };
+            console.log('END HELPER CREATE');
+            const response = await fetch(url, options);
+            const data = await response.json();
+
+            console.log('data', data);
+
+            return data;
+        } catch (err) {
+            next(err);
+        }
+    },
 };
 
 const BookingController = {
@@ -356,74 +420,37 @@ const BookingController = {
     // Update info booking to Zoho
     updateInfoBookingToCRM: async (req, res, next) => {
         try {
-            let { Sale_Order_ID, Status, Booking_ID } = req.body;
+            let { Sale_Order_ID, Booking_ID, Status, Worker_ID } = req.body;
 
             if (!Sale_Order_ID) return res.status(400).json(error_missing_params('Sale_Order_ID'));
+            if (!Booking_ID) return res.status(400).json(error_missing_params('Booking_ID'));
+            if (!Status) return res.status(400).json(error_missing_params('Status'));
 
-            let booking = await BookingCommon.onGetBookingByID_CRM(Sale_Order_ID);
-            if (!booking) {
-                return res.json(onBuildResponseErr('error_not_found_booking'));
+            // Update Sale_Order
+            if (Worker_ID) {
+                let data_update = {
+                    Status: 'Confirmed',
+                    Worker_ID: Worker_ID,
+                };
+
+                await Helper.onUpdateSaleOrderCRM(Sale_Order_ID, data_update, next);
             }
 
-            let booking_detail = await BookingCommon.onGetBookingDetailByBookingID(booking.booking_id);
-            if (!booking_detail) {
-                return res.json(onBuildResponseErr('error_not_found_booking_detail'));
-            }
+            // Update Status Booking
+            let length = Booking_ID.length;
+            for (let i = 0; i < length; i++) {
+                let data_update = {
+                    Job_Status: 'Scheduled',
+                    Payment_Status: 'Not_Yet_Paid',
+                };
 
-            let status_booking = booking_detail.status;
-            let app_ids = booking_detail.app_ids;
-            let zoho_ids = booking_detail.booking_id_crm;
-
-            Order_ID = !Order_ID ? booking.booking_id_crm : Order_ID;
-            if (Status) {
-                switch (Status) {
-                    case 'Draft': {
-                        status_booking = 0;
-                        break;
-                    }
-                    case 'Confirmed': {
-                        status_booking = 1;
-                        break;
-                    }
-                    case 'Received': {
-                        status_booking = 2;
-                        break;
-                    }
-                    case 'Processing': {
-                        status_booking = 3;
-                        break;
-                    }
-                    case 'Completed': {
-                        status_booking = 4;
-                        break;
-                    }
-                    case 'Canceled': {
-                        status_booking = 5;
-                        break;
-                    }
-                }
+                await Helper.onUpdateSaleOrderCRM(Booking_ID[i], data_update, next);
             }
-            console.log('Booking_ID', Booking_ID);
-            if (Booking_ID) {
-                app_ids = JSON.stringify(Object.keys(Booking_ID));
-                zoho_ids = JSON.stringify(Object.values(Booking_ID));
-                console.log('app_ids', app_ids);
-            }
-
-            // Save info booking
-            booking.booking_id_crm = Order_ID;
-            await booking.save();
-            booking_detail.app_ids = app_ids;
-            booking_detail.booking_id_crm = zoho_ids;
-            booking_detail.status = status_booking;
-            await booking_detail.save();
 
             return res.status(200).json({
                 ...successCallBack,
                 data: {
                     success: true,
-                    booking,
-                    booking_detail,
                 },
             });
         } catch (err) {

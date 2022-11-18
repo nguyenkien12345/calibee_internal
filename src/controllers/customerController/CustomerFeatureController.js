@@ -62,6 +62,7 @@ const CustomerFeatureController = {
                 start_time,
                 end_time,
                 location,
+                product_code_name,
                 total_payment,
             } = req.body;
 
@@ -76,6 +77,7 @@ const CustomerFeatureController = {
             if (!start_time) return res.status(400).json(error_missing_params('start_time'));
             if (!end_time) return res.status(400).json(error_missing_params('end_time'));
             if (!location) return res.status(400).json(error_missing_params('location'));
+            if (!product_code_name) return res.status(400).json(error_missing_params('product_code_name'));
             if (!total_payment) return res.status(400).json(error_missing_params('total_payment'));
 
             // set up data before call API from Zoho
@@ -94,6 +96,7 @@ const CustomerFeatureController = {
                 App_ID: customer_id,
                 Item_Rates_Are: 'Tax Inclusive',
                 Source: 'App',
+                Product_Code_Name: product_code_name ? product_code_name : 'O_Basic_079_I_P3h',
             };
             // Set Start_Date and End_Date
             if (basic_services.includes(service_category_id)) {
