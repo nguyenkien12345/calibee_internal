@@ -420,7 +420,7 @@ const BookingController = {
     // Update info booking to Zoho
     updateInfoBookingToCRM: async (req, res, next) => {
         try {
-            let { Sale_Order_ID, Booking_ID, Worker_ID } = req.body;
+            let { Sale_Order_ID, Booking_ID, Worker_ID, Status } = req.body;
 
             if (!Sale_Order_ID) return res.status(400).json(error_missing_params('Sale_Order_ID'));
             if (!Booking_ID) return res.status(400).json(error_missing_params('Booking_ID'));
@@ -433,17 +433,26 @@ const BookingController = {
                 };
 
                 await Helper.onUpdateSaleOrderCRM(Sale_Order_ID, data_update, next);
+
+                // Update Status Booking
+                let length = Booking_ID.length;
+                for (let i = 0; i < length; i++) {
+                    let data_update = {
+                        Job_Status: 'Scheduled',
+                        Payment_Status: 'Not_Yet_Paid',
+                    };
+
+                    await Helper.onUpdateSaleOrderCRM(Booking_ID[i], data_update, next);
+                }
             }
 
-            // Update Status Booking
-            let length = Booking_ID.length;
-            for (let i = 0; i < length; i++) {
+            // Update Status Booking (In_Processing or Completed or Canceled)
+            if (Status) {
                 let data_update = {
-                    Job_Status: 'Scheduled',
-                    Payment_Status: 'Not_Yet_Paid',
+                    Job_Status: Status,
                 };
 
-                await Helper.onUpdateSaleOrderCRM(Booking_ID[i], data_update, next);
+                await Helper.onUpdateSaleOrderCRM(Booking_ID[0], data_update, next);
             }
 
             return res.status(200).json({
