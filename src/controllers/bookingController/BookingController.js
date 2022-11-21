@@ -433,15 +433,15 @@ const BookingController = {
                         await Helper.onUpdateBookingCRM(Booking_ID[i], data_update, next);
                     }
                 }
-            }
+            } else {
+                // Update Status Booking (In_Processing or Completed or Canceled)
+                if (Status) {
+                    let data_update = {
+                        Job_Status: Status,
+                    };
 
-            // Update Status Booking (In_Processing or Completed or Canceled)
-            if (Status) {
-                let data_update = {
-                    Job_Status: Status,
-                };
-
-                await Helper.onUpdateBookingCRM(Booking_ID[0], data_update, next);
+                    await Helper.onUpdateBookingCRM(Booking_ID[0], data_update, next);
+                }
             }
 
             return res.status(200).json({
