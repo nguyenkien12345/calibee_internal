@@ -101,6 +101,10 @@ const Workers = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        wallet_id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
