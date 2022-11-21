@@ -228,7 +228,7 @@ const BookingController = {
             if (!working_time) return res.status(400).json(error_missing_params('working_time'));
             if (!worker_earnings) return res.status(400).json(error_missing_params('worker_earnings'));
             if (!total_payment) return res.status(400).json(error_missing_params('total_payment'));
-            if (!payment_method) return res.status(400).json(error_missing_params('payment_method'));
+            //if (!payment_method) return res.status(400).json(error_missing_params('payment_method'));
             if (!booking_ids) return res.status(400).json(error_missing_params('booking_ids'));
             if (!sale_order_id) return res.status(400).json(error_missing_params('sale_order_id'));
 
