@@ -15,10 +15,13 @@ const basic_services = [1, 2, 3, 4];
 const subscription_service = [5, 6];
 
 const Hepler = {
-    onCreateBookingCRM: async (data_booking_crm, res, next) => {
+    onCreateBookingCRM: async (data_booking_crm, req, res, next) => {
         try {
+            let { enviroment } = req.query;
+            enviroment = enviroment === 'PRO' ? 'order-management' : 'om-sandbox';
+
             console.log('IN HELPER CREATE');
-            const url = `${base_url}/om-sandbox/form/New_Order`;
+            const url = `${base_url}/${enviroment}/form/New_Order`;
             let accessToken = await getRefreshToken()
                 .then((data) => Promise.resolve(data))
                 .catch((err) => Promise.reject(err));
@@ -115,7 +118,7 @@ const CustomerFeatureController = {
             console.log('data_booking_crm', data_booking_crm);
 
             console.log('CALL HELPER CREATE');
-            let data_respone = await Hepler.onCreateBookingCRM(data_booking_crm, res, next);
+            let data_respone = await Hepler.onCreateBookingCRM(data_booking_crm, req, res, next);
             console.log('FINISH HELPER CREATE');
             let { code, data, error } = data_respone;
 
