@@ -167,7 +167,7 @@ const Helper = {
     onUpdateBookingCRM: async (booking_id, data_update, next) => {
         try {
             console.log('IN HELPER UPDATE BOOKING');
-            const url = `${base_url}/om-sandbox/report/Bookings/${booking_id}`;
+            const url = `${base_url}/om-sandbox/report/All_Bookings/${booking_id}`;
             let accessToken = await getRefreshToken()
                 .then((data) => Promise.resolve(data))
                 .catch((err) => Promise.reject(err));
