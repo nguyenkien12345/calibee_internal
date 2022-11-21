@@ -91,6 +91,9 @@ const CustomerController = {
                     next,
                 );
             }
+            return res.status(200).json({
+                ...successCallBack,
+            });
         } catch (err) {
             next(err);
         }

@@ -3,6 +3,7 @@ const fetch = require('node-fetch');
 const Customers = require('../../models/customer/Customer');
 const { getRefreshToken } = require('../../config/oauthCRM');
 const { error_missing_params, error_db_querry } = require('../../config/response/ResponseError');
+const { Op } = require('sequelize');
 
 dotenv.config();
 
@@ -36,8 +37,11 @@ const CustomerCRMCommon = {
         try {
             const customers = await Customers.findAll({
                 where: {
-                    app_id: null,
-                    customer_id_crm: null,
+                    [Op.or]: [
+                        { app_id: null, customer_id_crm: null },
+                        { app_id: null, customer_id_crm: '' },
+                        { app_id: '', customer_id_crm: null },
+                    ],
                 },
             }).catch((err) => res.json(error_db_querry(err)));
 
