@@ -405,23 +405,33 @@ const BookingController = {
             if (!Booking_ID) return res.status(400).json(error_missing_params('Booking_ID'));
 
             // Update Sale_Order
-            if (Worker_ID) {
-                let data_update = {
-                    Status: 'Confirmed',
-                    Worker_ID: Worker_ID,
-                };
-
-                await Helper.onUpdateSaleOrderCRM(Sale_Order_ID, data_update, next);
-
-                // Update Status Booking
-                let length = Booking_ID.length;
-                for (let i = 0; i < length; i++) {
+            if (Sale_Order_ID) {
+                if (Status) {
                     let data_update = {
-                        Job_Status: 'Scheduled',
-                        Payment_Status: 'Not_Yet_Paid',
+                        Status: Status,
                     };
 
-                    await Helper.onUpdateBookingCRM(Booking_ID[i], data_update, next);
+                    await Helper.onUpdateSaleOrderCRM(Sale_Order_ID, data_update, next);
+                }
+
+                if (Worker_ID) {
+                    let data_update = {
+                        Status: 'Confirmed',
+                        Worker_ID: Worker_ID,
+                    };
+
+                    await Helper.onUpdateSaleOrderCRM(Sale_Order_ID, data_update, next);
+
+                    // Update Status Booking
+                    let length = Booking_ID.length;
+                    for (let i = 0; i < length; i++) {
+                        let data_update = {
+                            Job_Status: 'Scheduled',
+                            Payment_Status: 'Not_Yet_Paid',
+                        };
+
+                        await Helper.onUpdateBookingCRM(Booking_ID[i], data_update, next);
+                    }
                 }
             }
 
