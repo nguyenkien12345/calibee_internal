@@ -95,7 +95,9 @@ const WorkerController = {
             let { code, data, error } = data_worker_crm.data;
             if (code === 3000 && data) {
                 buildProdLogger('info', 'register_crm_worker_success.log').info(
-                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} --- Message: ${phone} registered crm successfully --- Data: ${data}`,
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${
+                        req.method
+                    } --- Message: ${phone} registered crm successfully --- Data: ${JSON.stringify(data)}`,
                 );
                 return res.status(200).json({
                     ...successCallBack,
@@ -104,7 +106,9 @@ const WorkerController = {
                 });
             } else {
                 buildProdLogger('info', 'register_crm_worker_fail.log').info(
-                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} --- Message: ${phone} registered crm failure --- Error: ${error}`,
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${
+                        req.method
+                    } --- Message: ${phone} registered crm failure --- Error: ${JSON.stringify(error)}`,
                 );
                 return res.json({
                     ...errorCallBackWithOutParams,
