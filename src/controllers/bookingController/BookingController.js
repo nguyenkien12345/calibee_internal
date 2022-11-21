@@ -10,6 +10,7 @@ const BookingDetails = require('../../models/booking/BookingDetail');
 const Attendances = require('../../models/booking/Attendance');
 const fetch = require('node-fetch');
 const {
+    error_db_querry,
     errorCallBackWithOutParams,
     error_missing_params,
     onBuildResponseErr,
@@ -95,7 +96,6 @@ const Helper = {
         booking_ids,
         status,
         app_ids,
-        booking_id_crm,
         res,
         next,
     ) => {
@@ -123,7 +123,6 @@ const Helper = {
                 app_ids: JSON.stringify(booking_ids),
                 status: status,
                 app_ids: app_ids,
-                booking_id_crm: booking_id_crm,
             }).catch((err) => res.json(error_db_querry(err)));
 
             return booking_detail;
@@ -216,8 +215,11 @@ const BookingController = {
                 payment_method,
                 worker_id,
                 booking_ids,
-                sale_order_id,
+                ID,
             } = req.body;
+
+            let { method } = req.query;
+            method = method ? method : 'zoho';
 
             if (!customer_id) return res.status(400).json(error_missing_params('customer_id'));
             if (!service_category_id) return res.status(400).json(error_missing_params('service_category_id'));
@@ -228,9 +230,9 @@ const BookingController = {
             if (!working_time) return res.status(400).json(error_missing_params('working_time'));
             if (!worker_earnings) return res.status(400).json(error_missing_params('worker_earnings'));
             if (!total_payment) return res.status(400).json(error_missing_params('total_payment'));
-            if (!payment_method) return res.status(400).json(error_missing_params('payment_method'));
-            if (!booking_ids) return res.status(400).json(error_missing_params('booking_ids'));
-            if (!sale_order_id) return res.status(400).json(error_missing_params('sale_order_id'));
+            //if (!payment_method) return res.status(400).json(error_missing_params('payment_method'));
+            //if (!booking_ids) return res.status(400).json(error_missing_params('booking_ids'));
+            //if (!sale_order_id) return res.status(400).json(error_missing_params('sale_order_id'));
 
             let customer = await CustomerCommon.onGetCustomerByID_CRM(customer_id);
             if (!customer) {
@@ -241,27 +243,6 @@ const BookingController = {
             if (!service_category) {
                 return res.json(onBuildResponseErr('error_not_found_service_category'));
             }
-
-            // format start_day MM/DD/YYYY
-            let tmp = start_day.split('/');
-            start_day = tmp[1] + '/' + tmp[0] + '/' + tmp[2];
-
-            // format end_day MM/DD/YYYY
-            if (end_day) {
-                tmp = end_day.split('/');
-                end_day = tmp[1] + '/' + tmp[0] + '/' + tmp[2];
-            }
-
-            // Sale_Order_ID
-            let bookig_id = JSON.parse(sale_order_id);
-            //let bookig_id = sale_order_id;
-            let app_ids_booking = Object.keys(bookig_id);
-            let zoho_ids_booking = Object.values(bookig_id);
-
-            let booking_detail_ids = JSON.parse(booking_ids);
-            //let booking_detail_ids = booking_ids;
-            let app_ids_booking_detail = JSON.stringify(Object.keys(booking_detail_ids));
-            let zoho_ids_booking_detail = JSON.stringify(Object.values(booking_detail_ids));
 
             let package = service_type === 'Subscription' && booking_ids ? app_ids_booking_detail.length : 1;
             let { days_tmp, time_key } = Helper.onBeforeSaveInfoBookingCRM(
@@ -293,8 +274,7 @@ const BookingController = {
                 priority: 2,
                 time_key: JSON.stringify(time_key),
                 payment_method_id: payment_method === 'Cash' ? 5 : 6,
-                app_id: app_ids_booking[0],
-                booking_id_crm: zoho_ids_booking[0],
+                app_id: ID,
             }).catch((err) => res.json(error_db_querry(err)));
 
             // Create a new booking detail
@@ -318,8 +298,7 @@ const BookingController = {
                 working_time,
                 booking_ids,
                 status,
-                app_ids_booking_detail,
-                zoho_ids_booking_detail,
+                JSON.stringify(booking_ids),
                 res,
                 next,
             );
@@ -422,37 +401,35 @@ const BookingController = {
         try {
             let { Sale_Order_ID, Booking_ID, Worker_ID, Status } = req.body;
 
-            if (!Sale_Order_ID) return res.status(400).json(error_missing_params('Sale_Order_ID'));
-            if (!Booking_ID) return res.status(400).json(error_missing_params('Booking_ID'));
+            //if (!Sale_Order_ID) return res.status(400).json(error_missing_params('Sale_Order_ID'));
+            //if (!Booking_ID) return res.status(400).json(error_missing_params('Booking_ID'));
 
             // Update Sale_Order
-            if (Worker_ID) {
-                let data_update = {
-                    Status: 'Confirmed',
-                    Worker_ID: Worker_ID,
-                };
-
-                await Helper.onUpdateSaleOrderCRM(Sale_Order_ID, data_update, next);
-
-                // Update Status Booking
-                let length = Booking_ID.length;
-                for (let i = 0; i < length; i++) {
+            if (Sale_Order_ID) {
+                if (Status) {
                     let data_update = {
-                        Job_Status: 'Scheduled',
-                        Payment_Status: 'Not_Yet_Paid',
+                        Status: Status,
                     };
 
-                    await Helper.onUpdateSaleOrderCRM(Booking_ID[i], data_update, next);
+                    await Helper.onUpdateSaleOrderCRM(Sale_Order_ID, data_update, next);
                 }
-            }
 
-            // Update Status Booking (In_Processing or Completed or Canceled)
-            if (Status) {
-                let data_update = {
-                    Job_Status: Status,
-                };
+                if (Worker_ID) {
+                    let data_update = {
+                        Worker_ID: Worker_ID,
+                    };
 
-                await Helper.onUpdateSaleOrderCRM(Booking_ID[0], data_update, next);
+                    await Helper.onUpdateSaleOrderCRM(Sale_Order_ID, data_update, next);
+                }
+            } else {
+                // Update Status Booking (In_Processing or Completed or Canceled)
+                if (Status) {
+                    let data_update = {
+                        Job_Status: Status,
+                    };
+
+                    await Helper.onUpdateBookingCRM(Booking_ID[0], data_update, next);
+                }
             }
 
             return res.status(200).json({

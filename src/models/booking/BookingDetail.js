@@ -73,6 +73,10 @@ const BookingDetail = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: true,
         },
+        shift_detail_fee: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
     },
     {
         paranoid: true,

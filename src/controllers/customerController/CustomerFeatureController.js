@@ -83,7 +83,7 @@ const CustomerFeatureController = {
             // set up data before call API from Zoho
             let data_booking_crm = {
                 Order_ID: 'Auto Generate',
-                Status: 'Draft',
+                Status: 'Sent',
                 Account_Type: 'Other Current Liability',
                 Product_Name: service_category_id_crm,
                 Invoice_Date: now_date,
