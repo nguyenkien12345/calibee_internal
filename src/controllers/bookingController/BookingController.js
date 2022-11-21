@@ -219,6 +219,9 @@ const BookingController = {
                 sale_order_id,
             } = req.body;
 
+            let { method } = req.query;
+            method = method ? method : 'zoho';
+
             if (!customer_id) return res.status(400).json(error_missing_params('customer_id'));
             if (!service_category_id) return res.status(400).json(error_missing_params('service_category_id'));
             if (!address) return res.status(400).json(error_missing_params('address'));
@@ -252,14 +255,19 @@ const BookingController = {
                 end_day = tmp[1] + '/' + tmp[0] + '/' + tmp[2];
             }
 
+            let bookig_id = null;
+            let booking_detail_ids = null;
+            if (method === 'postman') {
+                bookig_id = sale_order_id;
+                booking_detail_ids = booking_ids;
+            } else {
+                bookig_id = JSON.parse(sale_order_id);
+                booking_detail_ids = JSON.parse(booking_ids);
+            }
             // Sale_Order_ID
-            let bookig_id = JSON.parse(sale_order_id);
-            //let bookig_id = sale_order_id;
             let app_ids_booking = Object.keys(bookig_id);
             let zoho_ids_booking = Object.values(bookig_id);
-
-            let booking_detail_ids = JSON.parse(booking_ids);
-            //let booking_detail_ids = booking_ids;
+            // Booking_IDs
             let app_ids_booking_detail = JSON.stringify(Object.keys(booking_detail_ids));
             let zoho_ids_booking_detail = JSON.stringify(Object.values(booking_detail_ids));
 
