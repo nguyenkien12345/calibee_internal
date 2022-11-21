@@ -12,6 +12,7 @@ const {
 } = require('../../config/response/ResponseError');
 const AuthenHelper = require('../../helpers/authen');
 const { onMakeid } = require('../../helpers/generate');
+const { buildProdLogger } = require('../../logger/index');
 
 dotenv.config();
 
@@ -93,12 +94,18 @@ const WorkerController = {
             let data_worker_crm = await WorkerCRMCommon.onRegisterCRM(worker_crm, next);
             let { code, data, error } = data_worker_crm.data;
             if (code === 3000 && data) {
+                buildProdLogger('info', 'register_crm_worker_success.log').info(
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} --- Message: ${phone} registered crm successfully --- Data: ${data}`,
+                );
                 return res.status(200).json({
                     ...successCallBack,
                     data: data,
                     user: worker_crm,
                 });
             } else {
+                buildProdLogger('info', 'register_crm_worker_fail.log').info(
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} --- Message: ${phone} registered crm failure --- Error: ${error}`,
+                );
                 return res.json({
                     ...errorCallBackWithOutParams,
                     error: error,
