@@ -430,7 +430,7 @@ const BookingController = {
         try {
             let { Sale_Order_ID, Booking_ID, Worker_ID, Status } = req.body;
 
-            if (!Sale_Order_ID) return res.status(400).json(error_missing_params('Sale_Order_ID'));
+            //if (!Sale_Order_ID) return res.status(400).json(error_missing_params('Sale_Order_ID'));
             if (!Booking_ID) return res.status(400).json(error_missing_params('Booking_ID'));
 
             // Update Sale_Order
