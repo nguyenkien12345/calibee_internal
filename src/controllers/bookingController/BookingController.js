@@ -247,14 +247,14 @@ const BookingController = {
             }
 
             // format start_day MM/DD/YYYY
-            let tmp = start_day.split('/');
-            start_day = tmp[1] + '/' + tmp[0] + '/' + tmp[2];
+            // let tmp = start_day.split('/');
+            // start_day = tmp[1] + '/' + tmp[0] + '/' + tmp[2];
 
             // format end_day MM/DD/YYYY
-            if (end_day) {
-                tmp = end_day.split('/');
-                end_day = tmp[1] + '/' + tmp[0] + '/' + tmp[2];
-            }
+            // if (end_day) {
+            //     tmp = end_day.split('/');
+            //     end_day = tmp[1] + '/' + tmp[0] + '/' + tmp[2];
+            // }
 
             let bookig_id = null;
             let booking_detail_ids = null;
