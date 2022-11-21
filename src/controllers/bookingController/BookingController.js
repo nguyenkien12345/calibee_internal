@@ -10,6 +10,7 @@ const BookingDetails = require('../../models/booking/BookingDetail');
 const Attendances = require('../../models/booking/Attendance');
 const fetch = require('node-fetch');
 const {
+    error_db_querry,
     errorCallBackWithOutParams,
     error_missing_params,
     onBuildResponseErr,
@@ -232,8 +233,8 @@ const BookingController = {
             if (!worker_earnings) return res.status(400).json(error_missing_params('worker_earnings'));
             if (!total_payment) return res.status(400).json(error_missing_params('total_payment'));
             //if (!payment_method) return res.status(400).json(error_missing_params('payment_method'));
-            if (!booking_ids) return res.status(400).json(error_missing_params('booking_ids'));
-            if (!sale_order_id) return res.status(400).json(error_missing_params('sale_order_id'));
+            //if (!booking_ids) return res.status(400).json(error_missing_params('booking_ids'));
+            //if (!sale_order_id) return res.status(400).json(error_missing_params('sale_order_id'));
 
             let customer = await CustomerCommon.onGetCustomerByID_CRM(customer_id);
             if (!customer) {
@@ -257,19 +258,19 @@ const BookingController = {
 
             let bookig_id = null;
             let booking_detail_ids = null;
-            if (method === 'postman') {
-                bookig_id = sale_order_id;
-                booking_detail_ids = booking_ids;
-            } else {
-                bookig_id = JSON.parse(sale_order_id);
-                booking_detail_ids = JSON.parse(booking_ids);
-            }
-            // Sale_Order_ID
-            let app_ids_booking = Object.keys(bookig_id);
-            let zoho_ids_booking = Object.values(bookig_id);
-            // Booking_IDs
-            let app_ids_booking_detail = JSON.stringify(Object.keys(booking_detail_ids));
-            let zoho_ids_booking_detail = JSON.stringify(Object.values(booking_detail_ids));
+            // if (method === 'postman') {
+            //     bookig_id = sale_order_id;
+            //     booking_detail_ids = booking_ids;
+            // } else {
+            //     bookig_id = JSON.parse(sale_order_id);
+            //     booking_detail_ids = JSON.parse(booking_ids);
+            // }
+            // // Sale_Order_ID
+            // let app_ids_booking = Object.keys(bookig_id);
+            // let zoho_ids_booking = Object.values(bookig_id);
+            // // Booking_IDs
+            // let app_ids_booking_detail = JSON.stringify(Object.keys(booking_detail_ids));
+            // let zoho_ids_booking_detail = JSON.stringify(Object.values(booking_detail_ids));
 
             let package = service_type === 'Subscription' && booking_ids ? app_ids_booking_detail.length : 1;
             let { days_tmp, time_key } = Helper.onBeforeSaveInfoBookingCRM(
@@ -301,8 +302,8 @@ const BookingController = {
                 priority: 2,
                 time_key: JSON.stringify(time_key),
                 payment_method_id: payment_method === 'Cash' ? 5 : 6,
-                app_id: app_ids_booking[0],
-                booking_id_crm: zoho_ids_booking[0],
+                //app_id: app_ids_booking[0],
+                //booking_id_crm: zoho_ids_booking[0],
             }).catch((err) => res.json(error_db_querry(err)));
 
             // Create a new booking detail
