@@ -271,6 +271,8 @@ const BookingController = {
             // // Booking_IDs
             // let app_ids_booking_detail = JSON.stringify(Object.keys(booking_detail_ids));
             // let zoho_ids_booking_detail = JSON.stringify(Object.values(booking_detail_ids));
+            let app_ids_booking_detail = null;
+            let zoho_ids_booking_detail = null;
 
             let package = service_type === 'Subscription' && booking_ids ? app_ids_booking_detail.length : 1;
             let { days_tmp, time_key } = Helper.onBeforeSaveInfoBookingCRM(
