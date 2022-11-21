@@ -450,7 +450,7 @@ const BookingController = {
                         Payment_Status: 'Not_Yet_Paid',
                     };
 
-                    await Helper.onUpdateSaleOrderCRM(Booking_ID[i], data_update, next);
+                    await Helper.onUpdateBookingCRM(Booking_ID[i], data_update, next);
                 }
             }
 
@@ -460,7 +460,7 @@ const BookingController = {
                     Job_Status: Status,
                 };
 
-                await Helper.onUpdateSaleOrderCRM(Booking_ID[0], data_update, next);
+                await Helper.onUpdateBookingCRM(Booking_ID[0], data_update, next);
             }
 
             return res.status(200).json({
