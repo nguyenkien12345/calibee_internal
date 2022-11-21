@@ -244,34 +244,6 @@ const BookingController = {
                 return res.json(onBuildResponseErr('error_not_found_service_category'));
             }
 
-            // format start_day MM/DD/YYYY
-            // let tmp = start_day.split('/');
-            // start_day = tmp[1] + '/' + tmp[0] + '/' + tmp[2];
-
-            // format end_day MM/DD/YYYY
-            // if (end_day) {
-            //     tmp = end_day.split('/');
-            //     end_day = tmp[1] + '/' + tmp[0] + '/' + tmp[2];
-            // }
-
-            // let bookig_id = null;
-            // let booking_detail_ids = null;
-            // if (method === 'postman') {
-            //     bookig_id = sale_order_id;
-            //     booking_detail_ids = booking_ids;
-            // } else {
-            //     bookig_id = JSON.parse(sale_order_id);
-            //     booking_detail_ids = JSON.parse(booking_ids);
-            // }
-            // Sale_Order_ID
-            // let app_ids_booking = Object.keys(bookig_id);
-            // let zoho_ids_booking = Object.values(bookig_id);
-            // Booking_IDs
-            // let app_ids_booking_detail = JSON.stringify(Object.keys(booking_detail_ids));
-            // let zoho_ids_booking_detail = JSON.stringify(Object.values(booking_detail_ids));
-            // let app_ids_booking_detail = null;
-            // let zoho_ids_booking_detail = null;
-
             let package = service_type === 'Subscription' && booking_ids ? app_ids_booking_detail.length : 1;
             let { days_tmp, time_key } = Helper.onBeforeSaveInfoBookingCRM(
                 days,
@@ -303,7 +275,6 @@ const BookingController = {
                 time_key: JSON.stringify(time_key),
                 payment_method_id: payment_method === 'Cash' ? 5 : 6,
                 app_id: ID,
-                //booking_id_crm: zoho_ids_booking[0],
             }).catch((err) => res.json(error_db_querry(err)));
 
             // Create a new booking detail
