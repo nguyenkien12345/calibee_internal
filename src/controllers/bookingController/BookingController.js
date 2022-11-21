@@ -96,7 +96,6 @@ const Helper = {
         booking_ids,
         status,
         app_ids,
-        booking_id_crm,
         res,
         next,
     ) => {
@@ -124,7 +123,6 @@ const Helper = {
                 app_ids: JSON.stringify(booking_ids),
                 status: status,
                 app_ids: app_ids,
-                booking_id_crm: booking_id_crm,
             }).catch((err) => res.json(error_db_querry(err)));
 
             return booking_detail;
@@ -217,7 +215,7 @@ const BookingController = {
                 payment_method,
                 worker_id,
                 booking_ids,
-                sale_order_id,
+                ID,
             } = req.body;
 
             let { method } = req.query;
@@ -256,21 +254,21 @@ const BookingController = {
             //     end_day = tmp[1] + '/' + tmp[0] + '/' + tmp[2];
             // }
 
-            let bookig_id = null;
-            let booking_detail_ids = null;
-            if (method === 'postman') {
-                bookig_id = sale_order_id;
-                booking_detail_ids = booking_ids;
-            } else {
-                bookig_id = JSON.parse(sale_order_id);
-                booking_detail_ids = JSON.parse(booking_ids);
-            }
+            // let bookig_id = null;
+            // let booking_detail_ids = null;
+            // if (method === 'postman') {
+            //     bookig_id = sale_order_id;
+            //     booking_detail_ids = booking_ids;
+            // } else {
+            //     bookig_id = JSON.parse(sale_order_id);
+            //     booking_detail_ids = JSON.parse(booking_ids);
+            // }
             // Sale_Order_ID
-            let app_ids_booking = Object.keys(bookig_id);
-            let zoho_ids_booking = Object.values(bookig_id);
+            // let app_ids_booking = Object.keys(bookig_id);
+            // let zoho_ids_booking = Object.values(bookig_id);
             // Booking_IDs
-            let app_ids_booking_detail = JSON.stringify(Object.keys(booking_detail_ids));
-            let zoho_ids_booking_detail = JSON.stringify(Object.values(booking_detail_ids));
+            // let app_ids_booking_detail = JSON.stringify(Object.keys(booking_detail_ids));
+            // let zoho_ids_booking_detail = JSON.stringify(Object.values(booking_detail_ids));
             // let app_ids_booking_detail = null;
             // let zoho_ids_booking_detail = null;
 
@@ -304,33 +302,9 @@ const BookingController = {
                 priority: 2,
                 time_key: JSON.stringify(time_key),
                 payment_method_id: payment_method === 'Cash' ? 5 : 6,
-                //app_id: app_ids_booking[0],
+                app_id: ID,
                 //booking_id_crm: zoho_ids_booking[0],
-                //}).catch((err) => res.json(error_db_querry(err)));
-            }).catch((err) =>
-                res.json({
-                    status: false,
-                    err_code: 5001,
-                    message: err,
-                    data: {
-                        customer_id,
-                        service_category_id,
-                        address,
-                        days,
-                        start_day,
-                        end_day,
-                        start_time,
-                        service_type,
-                        working_time,
-                        worker_earnings,
-                        total_payment,
-                        payment_method,
-                        worker_id,
-                        booking_ids,
-                        sale_order_id,
-                    },
-                }),
-            );
+            }).catch((err) => res.json(error_db_querry(err)));
 
             // Create a new booking detail
             let worker = null;
@@ -353,8 +327,7 @@ const BookingController = {
                 working_time,
                 booking_ids,
                 status,
-                app_ids_booking_detail,
-                zoho_ids_booking_detail,
+                JSON.stringify(booking_ids),
                 res,
                 next,
             );
