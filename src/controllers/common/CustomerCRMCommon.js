@@ -103,7 +103,7 @@ const CustomerCRMCommon = {
         }
     },
 
-    onHandleRegisterCRM: async (name, email, phone, customer_id, next) => {
+    onHandleRegisterCRM: async (name, email, phone, customer_id, req, next) => {
         try {
             if (!name) return res.status(400).json(error_missing_params('name'));
             if (!email) return res.status(400).json(error_missing_params('email'));
