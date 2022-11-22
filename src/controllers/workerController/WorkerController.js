@@ -76,6 +76,11 @@ const WorkerController = {
             }
 
             let Registered_Works = skillData.map((x) => x.skill_name);
+            buildProdLogger('info', 'register_crm_worker_information.log').info(
+                `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+				--- Message: ${phone} register crm worker information 
+				--- Data Skill: ${JSON.stringify(skillData)} --- Data Registered Work: ${JSON.stringify(Registered_Works)}`,
+            );
 
             let worker_crm = {
                 Lead_Name: name,
@@ -93,11 +98,6 @@ const WorkerController = {
             };
 
             let data_worker_crm = await WorkerCRMCommon.onRegisterCRM(worker_crm, next);
-            buildProdLogger('info', 'register_crm_worker_information.log').info(
-                `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${
-                    req.method
-                } --- Message: ${phone} register crm worker information --- Data: ${JSON.stringify(data_worker_crm)}`,
-            );
 
             let { code, data, error } = data_worker_crm.data;
             if (code === 3000 && data) {
