@@ -34,13 +34,9 @@ const Attendance = sequelize.define(
             defaultValue: -1,
             allowNull: true,
         },
-        active_cron: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
-        },
-        create_cron: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: false,
+        now_cron: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
         },
     },
     {
