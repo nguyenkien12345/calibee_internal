@@ -4,6 +4,7 @@ const Customers = require('../../models/customer/Customer');
 const { getRefreshToken } = require('../../config/oauthCRM');
 const { error_missing_params, error_db_querry } = require('../../config/response/ResponseError');
 const { Op } = require('sequelize');
+const { buildProdLogger } = require('../../logger/index');
 
 dotenv.config();
 
@@ -120,8 +121,16 @@ const CustomerCRMCommon = {
             let data_customer_crm = await CustomerCRMCommon.onRegisterCRM(customer_crm, next);
             let { code, data, error } = data_customer_crm.data;
             if (code === 3000 && data) {
+                buildProdLogger('info', 'register_crm_customer_success.log').info(
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+					--- Message: ${phone} registered crm successfully --- Data: ${JSON.stringify(data)}`,
+                );
                 return true;
             } else {
+                buildProdLogger('error', 'register_crm_customer_fail.log').error(
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+					--- Message: ${phone} registered crm failure --- Error: ${JSON.stringify(error)}`,
+                );
                 return false;
             }
         } catch (err) {
