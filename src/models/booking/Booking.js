@@ -162,6 +162,10 @@ const Booking = sequelize.define(
             type: DataTypes.STRING(100),
             allowNull: true,
         },
+        amount_worker: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            defaultValue: 1,
+        },
     },
     {
         paranoid: true,
