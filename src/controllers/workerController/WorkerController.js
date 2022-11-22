@@ -76,11 +76,6 @@ const WorkerController = {
             }
 
             let Registered_Works = skillData.map((x) => x.skill_name);
-            buildProdLogger('info', 'register_crm_worker_information.log').info(
-                `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
-				--- Message: ${phone} register crm worker information 
-				--- Data Skill: ${JSON.stringify(skillData)} --- Data Registered Work: ${JSON.stringify(Registered_Works)}`,
-            );
 
             let worker_crm = {
                 Lead_Name: name,
@@ -98,13 +93,16 @@ const WorkerController = {
             };
 
             let data_worker_crm = await WorkerCRMCommon.onRegisterCRM(worker_crm, next);
+            buildProdLogger('info', 'register_crm_worker_information.log').info(
+                `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+				--- Message: ${phone} register crm worker information --- Data: ${JSON.stringify(data_worker_crm)}`,
+            );
 
             let { code, data, error } = data_worker_crm.data;
             if (code === 3000 && data) {
                 buildProdLogger('info', 'register_crm_worker_success.log').info(
-                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${
-                        req.method
-                    } --- Message: ${phone} registered crm successfully --- Data: ${JSON.stringify(data)}`,
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+					--- Message: ${phone} registered crm successfully --- Data: ${JSON.stringify(data)}`,
                 );
                 return res.status(200).json({
                     ...successCallBack,
@@ -112,10 +110,9 @@ const WorkerController = {
                     user: worker_crm,
                 });
             } else {
-                buildProdLogger('info', 'register_crm_worker_fail.log').info(
-                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${
-                        req.method
-                    } --- Message: ${phone} registered crm failure --- Error: ${JSON.stringify(error)}`,
+                buildProdLogger('error', 'register_crm_worker_fail.log').error(
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+					--- Message: ${phone} registered crm failure --- Error: ${JSON.stringify(error)}`,
                 );
                 return res.json({
                     ...errorCallBackWithOutParams,
@@ -154,9 +151,8 @@ const WorkerController = {
                 let { code, data, error } = data_worker_crm.data;
                 if (code === 3000 && data) {
                     buildProdLogger('info', 'update_crm_worker_success.log').info(
-                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${
-                            req.method
-                        } --- Message: ${zohoId} updated crm successfully --- Data: ${JSON.stringify(data)}`,
+                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+						--- Message: ${zohoId} updated crm successfully --- Data: ${JSON.stringify(data)}`,
                     );
                     return res.status(200).json({
                         ...successCallBack,
@@ -164,9 +160,8 @@ const WorkerController = {
                     });
                 } else {
                     buildProdLogger('error', 'update_crm_worker_fail.log').error(
-                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${
-                            req.method
-                        } --- Message: ${zohoId} updated crm failure --- Error: ${JSON.stringify(error)}`,
+                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+						--- Message: ${zohoId} updated crm failure --- Error: ${JSON.stringify(error)}`,
                     );
                     return res.json({
                         ...errorCallBackWithOutParams,

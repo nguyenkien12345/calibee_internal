@@ -61,14 +61,27 @@ const CustomerController = {
                 Customer_ID: '',
             };
             let data_customer_crm = await CustomerCRMCommon.onRegisterCRM(customer_crm, next);
+            buildProdLogger('info', 'register_crm_customer_information.log').info(
+                `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+				--- Message: ${phone} register crm customer information --- Data: ${JSON.stringify(data_customer_crm)}`,
+            );
+
             let { code, data, error } = data_customer_crm.data;
             if (code === 3000 && data) {
+                buildProdLogger('info', 'register_crm_customer_success.log').info(
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+					--- Message: ${phone} registered crm successfully --- Data: ${JSON.stringify(data)}`,
+                );
                 return res.status(200).json({
                     ...successCallBack,
                     data: data,
                     user: customer_crm,
                 });
             } else {
+                buildProdLogger('error', 'register_crm_customer_fail.log').error(
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+					--- Message: ${phone} registered crm failure --- Error: ${JSON.stringify(error)}`,
+                );
                 return res.json({
                     ...errorCallBackWithOutParams,
                     error: error,
@@ -92,6 +105,7 @@ const CustomerController = {
                 );
             }
             return res.status(200).json({
+                count: customersNotRegister.length,
                 ...successCallBack,
             });
         } catch (err) {
@@ -120,11 +134,19 @@ const CustomerController = {
                 let data_customer_crm = await CustomerCRMCommon.onUpdateCRM(zohoId, updatedCustomer, next);
                 let { code, data, error } = data_customer_crm.data;
                 if (code === 3000 && data) {
+                    buildProdLogger('info', 'update_crm_worker_success.log').info(
+                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+						--- Message: ${zohoId} updated crm successfully --- Data: ${JSON.stringify(data)}`,
+                    );
                     return res.status(200).json({
                         ...successCallBack,
                         data: data,
                     });
                 } else {
+                    buildProdLogger('info', 'update_crm_worker_fail.log').info(
+                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+						--- Message: ${zohoId} updated crm failure --- Error: ${JSON.stringify(error)}`,
+                    );
                     return res.json({
                         ...errorCallBackWithOutParams,
                         error: error,
