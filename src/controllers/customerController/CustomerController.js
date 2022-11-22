@@ -102,6 +102,7 @@ const CustomerController = {
                     customersNotRegister[i].email,
                     customersNotRegister[i].phone,
                     customersNotRegister[i].customer_id,
+                    req,
                     next,
                 );
             }
