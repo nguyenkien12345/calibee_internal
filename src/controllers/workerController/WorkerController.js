@@ -3,7 +3,6 @@ const Workers = require('../../models/worker/Worker');
 const WorkerCommon = require('../common/WorkerCommon');
 const WorkerCRMCommon = require('../common/WorkerCRMCommon');
 const CallAPICommon = require('../../callAPI/Common/index');
-const CallAPIWorker = require('../../callAPI/Worker/index');
 const { successCallBack } = require('../../config/response/ResponseSuccess');
 const {
     error_missing_params,
@@ -277,6 +276,33 @@ const WorkerController = {
                     user: { ...other },
                 },
             });
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    getDetailInfoBank: async (req, res, next) => {
+        try {
+            let worker_id = req.body.worker_id;
+
+            if (!worker_id) return res.status(400).json(error_missing_params('worker_id'));
+
+            let worker = await WorkerCRMCommon.getDetailInfoBank(worker_id);
+
+            if (worker.data.code === 3100) {
+                return res.json(onBuildResponseErr('error_not_found_user'));
+            } else if (worker.data.code === 3000 && worker.data.data) {
+                let infoAccount = {
+                    accountNumber: worker.data.data[0].Account_Number,
+                    bankName: worker.data.data[0].Bank_Name,
+                };
+                return res.status(200).json({
+                    ...successCallBack,
+                    data: {
+                        ...infoAccount,
+                    },
+                });
+            }
         } catch (err) {
             next(err);
         }
