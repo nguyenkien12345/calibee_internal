@@ -53,8 +53,6 @@ const WorkerController = {
 
             if (!name) return res.status(400).json(error_missing_params('name'));
             if (!phone) return res.status(400).json(error_missing_params('phone'));
-            if (!nid) return res.status(400).json(error_missing_params('nid'));
-            if (!address) return res.status(400).json(error_missing_params('address'));
             if (!skills) return res.status(400).json(error_missing_params('skills'));
             if (!working_area) return res.status(400).json(error_missing_params('working_area'));
             if (!worker_id) return res.status(400).json(error_missing_params('worker_id'));
@@ -84,8 +82,8 @@ const WorkerController = {
                 Gender: '',
                 Lead_Source: 'Form Submission',
                 Lead_Status: 'Capturing',
-                Nid: nid,
-                Address: address,
+                Nid: nid ? nid : '',
+                Address: address ? address : '',
                 Registered_Works: Registered_Works,
                 City_Province: cityData.name,
                 App_ID: worker_id,
