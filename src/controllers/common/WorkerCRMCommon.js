@@ -1,7 +1,5 @@
 const dotenv = require('dotenv');
 const fetch = require('node-fetch');
-const { successCallBack } = require('../../config/response/ResponseSuccess');
-const { errorCallBackWithOutParams } = require('../../config/response/ResponseError');
 const { getRefreshToken } = require('../../config/oauthCRM');
 
 dotenv.config();
@@ -96,6 +94,29 @@ const WorkerCRMCommon = {
                         ...worker,
                     },
                 }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Zoho-oauthtoken ${accessToken.access_token}`,
+                },
+            };
+            const response = await fetch(url, options);
+            const data = await response.json();
+            return {
+                data: data,
+            };
+        } catch (err) {
+            next(err);
+        }
+    },
+
+    getDetailInfoBank: async (Worker_ID, next) => {
+        try {
+            const url = `${base_url}/worker-onboarding/report/All_Workers?Worker_ID=${Worker_ID}`;
+            let accessToken = await getRefreshToken()
+                .then((data) => Promise.resolve(data))
+                .catch((err) => Promise.reject(err));
+            const options = {
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Zoho-oauthtoken ${accessToken.access_token}`,
