@@ -105,6 +105,10 @@ const Workers = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
+        deposit: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
