@@ -109,6 +109,18 @@ const Workers = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
+        accountNumber: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        bankName: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        branch: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
