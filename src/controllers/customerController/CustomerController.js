@@ -56,7 +56,7 @@ const CustomerController = {
             let customer_crm = {
                 Email: email,
                 Mobile: phone.replace('0', '+84'),
-                Contact_Name: name,
+                Contact_Name: name.toUpperCase(),
                 App_ID: customer_id,
                 Source: 'App',
                 Customer_ID: '',

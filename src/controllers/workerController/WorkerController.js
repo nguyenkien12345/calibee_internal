@@ -75,7 +75,7 @@ const WorkerController = {
             let Registered_Works = skillData.map((x) => x.skill_name);
 
             let worker_crm = {
-                Lead_Name: name,
+                Lead_Name: name.toUpperCase(),
                 Mobile: phone.replace('0', '+84'),
                 Email: '',
                 Gender: '',
