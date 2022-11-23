@@ -111,11 +111,11 @@ const Booking = sequelize.define(
             allowNull: true,
         },
         lat: {
-            type: DataTypes.STRING,
+            type: DataTypes.FLOAT,
             allowNull: true,
         },
         long: {
-            type: DataTypes.STRING,
+            type: DataTypes.FLOAT,
             allowNull: true,
         },
         priority: {
@@ -165,6 +165,10 @@ const Booking = sequelize.define(
         amount_worker: {
             type: DataTypes.INTEGER.UNSIGNED,
             defaultValue: 1,
+        },
+        district: {
+            type: DataTypes.TEXT,
+            allowNull: true,
         },
     },
     {
