@@ -118,11 +118,12 @@ const CustomerController = {
     updateCRM: async (req, res, next) => {
         try {
             const zohoId = req.body.zohoId;
+
             if (!zohoId) {
                 return res.status(400).json(error_missing_params('zohoId'));
             }
 
-            const { name, province, address, email } = req.body;
+            const { name, province, address, email, district, street } = req.body;
 
             let customer = await CustomerCRMCommon.onGetDetailCustomer(zohoId, res, next);
             if (customer.data.code === 3100) {
@@ -132,6 +133,8 @@ const CustomerController = {
                     Contact_Name: name ? name : customer.data.data.Contact_Name,
                     City_Province: province ? province : customer.data.data.City_Province,
                     Email: email ? email : customer.data.data.Email,
+                    district: district ? district : customer.data.data.District,
+                    Street: street ? street : customer.data.data.Street,
                 };
                 let data_customer_crm = await CustomerCRMCommon.onUpdateCRM(zohoId, updatedCustomer, next);
                 let { code, data, error } = data_customer_crm.data;
