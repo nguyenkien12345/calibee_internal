@@ -133,7 +133,7 @@ const CustomerController = {
                     Contact_Name: name ? name : customer.data.data.Contact_Name,
                     City_Province: province ? province : customer.data.data.City_Province,
                     Email: email ? email : customer.data.data.Email,
-                    district: district ? district : customer.data.data.District,
+                    District: district ? district : customer.data.data.District,
                     Street: street ? street : customer.data.data.Street,
                 };
                 let data_customer_crm = await CustomerCRMCommon.onUpdateCRM(zohoId, updatedCustomer, next);
