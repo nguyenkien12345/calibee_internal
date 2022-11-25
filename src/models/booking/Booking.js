@@ -150,11 +150,7 @@ const Booking = sequelize.define(
             type: DataTypes.STRING(100),
             allowNull: true,
         },
-        momo_signature: {
-            type: DataTypes.STRING(100),
-            allowNull: true,
-        },
-        momo_request_type: {
+        momo_order_id: {
             type: DataTypes.STRING(100),
             allowNull: true,
         },
