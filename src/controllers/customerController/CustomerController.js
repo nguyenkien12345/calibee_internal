@@ -141,7 +141,7 @@ const CustomerController = {
                 if (code === 3000 && data) {
                     buildProdLogger('info', 'update_crm_worker_success.log').info(
                         `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
-						--- Message: ${zohoId} updated crm successfully --- Data: ${JSON.stringify(data)}`,
+						--- Message: ${zohoId} updated crm successfully --- Data: ${JSON.stringify(data)} --- Body: ${updatedCustomer}`,
                     );
                     return res.status(200).json({
                         ...successCallBack,
@@ -150,7 +150,7 @@ const CustomerController = {
                 } else {
                     buildProdLogger('info', 'update_crm_worker_fail.log').info(
                         `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
-						--- Message: ${zohoId} updated crm failure --- Error: ${JSON.stringify(error)}`,
+						--- Message: ${zohoId} updated crm failure --- Error: ${JSON.stringify(error)} --- Body: ${updatedCustomer}`,
                     );
                     return res.json({
                         ...errorCallBackWithOutParams,
