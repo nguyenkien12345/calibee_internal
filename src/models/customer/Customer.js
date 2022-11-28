@@ -89,6 +89,10 @@ const Customer = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        default_payment_method: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
