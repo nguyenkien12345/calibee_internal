@@ -2,13 +2,13 @@ const dotenv = require('dotenv');
 const Customers = require('../../models/customer/Customer');
 const CustomerCommon = require('../common/CustomerCommon');
 const CustomerCRMCommon = require('../common/CustomerCRMCommon');
+const CallAPICommon = require('../../callAPI/Common/index');
 const { successCallBack } = require('../../config/response/ResponseSuccess');
 const {
     errorCallBackWithOutParams,
     error_missing_params,
     onBuildResponseErr,
 } = require('../../config/response/ResponseError');
-const AuthenHelper = require('../../helpers/authen');
 const { buildProdLogger } = require('../../logger/index');
 
 dotenv.config();
@@ -63,14 +63,16 @@ const CustomerController = {
             };
             let data_customer_crm = await CustomerCRMCommon.onRegisterCRM(customer_crm, next);
             buildProdLogger('info', 'register_crm_customer_information.log').info(
-                `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+                `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
+				--- Method: ${req.method} --- Controller: CustomerController
 				--- Message: ${phone} register crm customer information --- Data: ${JSON.stringify(data_customer_crm)}`,
             );
 
             let { code, data, error } = data_customer_crm.data;
             if (code === 3000 && data) {
                 buildProdLogger('info', 'register_crm_customer_success.log').info(
-                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
+					--- Method: ${req.method} --- Controller: CustomerController
 					--- Message: ${phone} registered crm successfully --- Data: ${JSON.stringify(data)}`,
                 );
                 return res.status(200).json({
@@ -80,7 +82,8 @@ const CustomerController = {
                 });
             } else {
                 buildProdLogger('error', 'register_crm_customer_fail.log').error(
-                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
+					--- Method: ${req.method} --- Controller: CustomerController
 					--- Message: ${phone} registered crm failure --- Error: ${JSON.stringify(error)}`,
                 );
                 return res.json({
@@ -125,13 +128,18 @@ const CustomerController = {
 
             const { name, province, address, email, district, street } = req.body;
 
+            let cities_data = await CallAPICommon.getAllCities();
+            let result_cities = [];
+            result_cities = JSON.parse(cities_data.data).data.cities;
+            let cityData = result_cities.find((x) => x.city_id.toString() === province.toString());
+
             let customer = await CustomerCRMCommon.onGetDetailCustomer(zohoId, res, next);
             if (customer.data.code === 3100) {
                 return res.json(onBuildResponseErr('error_not_found_user'));
             } else if (customer.data.code === 3000 && customer.data.data) {
                 let updatedCustomer = {
                     Contact_Name: name ? name : customer.data.data.Contact_Name,
-                    City_Province: province ? province : customer.data.data.City_Province,
+                    City_Province: province ? cityData.name : customer.data.data.City_Province,
                     Email: email ? email : customer.data.data.Email,
                     Districts: district ? district : customer.data.data.Districts,
                     Street: street ? street : customer.data.data.Street,
@@ -140,10 +148,10 @@ const CustomerController = {
                 let { code, data, error } = data_customer_crm.data;
                 if (code === 3000 && data) {
                     buildProdLogger('info', 'update_crm_customer_success.log').info(
-                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
-						--- Message: ${zohoId} updated crm successfully --- Data: ${JSON.stringify(data)} --- Body: ${JSON.stringify(
-                            updatedCustomer,
-                        )}`,
+                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
+						--- Method: ${req.method} --- Controller: CustomerController
+						--- Message: ${zohoId} updated crm successfully --- Data: ${JSON.stringify(data)} 
+						--- Body: ${JSON.stringify(updatedCustomer)}`,
                     );
                     return res.status(200).json({
                         ...successCallBack,
@@ -151,10 +159,10 @@ const CustomerController = {
                     });
                 } else {
                     buildProdLogger('info', 'update_crm_customer_fail.log').info(
-                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
-						--- Message: ${zohoId} updated crm failure --- Error: ${JSON.stringify(error)} --- Body: ${JSON.stringify(
-                            updatedCustomer,
-                        )}`,
+                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
+						--- Method: ${req.method} --- Controller: CustomerController
+						--- Message: ${zohoId} updated crm failure --- Error: ${JSON.stringify(error)} 
+						--- Body: ${JSON.stringify(updatedCustomer)}`,
                     );
                     return res.json({
                         ...errorCallBackWithOutParams,
