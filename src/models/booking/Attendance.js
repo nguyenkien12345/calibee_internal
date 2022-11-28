@@ -38,6 +38,10 @@ const Attendance = sequelize.define(
             type: DataTypes.INTEGER,
             defaultValue: 0,
         },
+        add_time: {
+            type: DataTypes.TEXT,
+            defaultValue: null,
+        },
     },
     {
         charset: 'utf8mb4',
