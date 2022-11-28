@@ -2,6 +2,7 @@ const dotenv = require('dotenv');
 const Customers = require('../../models/customer/Customer');
 const CustomerCommon = require('../common/CustomerCommon');
 const CustomerCRMCommon = require('../common/CustomerCRMCommon');
+const CallAPICommon = require('../../callAPI/Common/index');
 const { successCallBack } = require('../../config/response/ResponseSuccess');
 const {
     errorCallBackWithOutParams,
@@ -127,13 +128,18 @@ const CustomerController = {
 
             const { name, province, address, email, district, street } = req.body;
 
+            let cities_data = await CallAPICommon.getAllCities();
+            let result_cities = [];
+            result_cities = JSON.parse(cities_data.data).data.cities;
+            let cityData = result_cities.find((x) => x.city_id.toString() === province.toString());
+
             let customer = await CustomerCRMCommon.onGetDetailCustomer(zohoId, res, next);
             if (customer.data.code === 3100) {
                 return res.json(onBuildResponseErr('error_not_found_user'));
             } else if (customer.data.code === 3000 && customer.data.data) {
                 let updatedCustomer = {
                     Contact_Name: name ? name : customer.data.data.Contact_Name,
-                    City_Province: province ? province : customer.data.data.City_Province,
+                    City_Province: province ? cityData.name : customer.data.data.City_Province,
                     Email: email ? email : customer.data.data.Email,
                     Districts: district ? district : customer.data.data.Districts,
                     Street: street ? street : customer.data.data.Street,
