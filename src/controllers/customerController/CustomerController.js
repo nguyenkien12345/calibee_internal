@@ -133,7 +133,7 @@ const CustomerController = {
                     Contact_Name: name ? name : customer.data.data.Contact_Name,
                     City_Province: province ? province : customer.data.data.City_Province,
                     Email: email ? email : customer.data.data.Email,
-                    district: district ? district : customer.data.data.District,
+                    Districts: district ? district : customer.data.data.District,
                     Street: street ? street : customer.data.data.Street,
                 };
                 let data_customer_crm = await CustomerCRMCommon.onUpdateCRM(zohoId, updatedCustomer, next);
@@ -141,7 +141,7 @@ const CustomerController = {
                 if (code === 3000 && data) {
                     buildProdLogger('info', 'update_crm_worker_success.log').info(
                         `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
-						--- Message: ${zohoId} updated crm successfully --- Data: ${JSON.stringify(data)}`,
+						--- Message: ${zohoId} updated crm successfully --- Data: ${JSON.stringify(data)} --- Body: ${updatedCustomer}`,
                     );
                     return res.status(200).json({
                         ...successCallBack,
@@ -150,7 +150,7 @@ const CustomerController = {
                 } else {
                     buildProdLogger('info', 'update_crm_worker_fail.log').info(
                         `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
-						--- Message: ${zohoId} updated crm failure --- Error: ${JSON.stringify(error)}`,
+						--- Message: ${zohoId} updated crm failure --- Error: ${JSON.stringify(error)} --- Body: ${updatedCustomer}`,
                     );
                     return res.json({
                         ...errorCallBackWithOutParams,
