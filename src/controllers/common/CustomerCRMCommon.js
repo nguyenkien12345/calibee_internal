@@ -122,13 +122,15 @@ const CustomerCRMCommon = {
             let { code, data, error } = data_customer_crm.data;
             if (code === 3000 && data) {
                 buildProdLogger('info', 'register_crm_customer_success.log').info(
-                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
+					--- Method: ${req.method} --- Common: CustomerCRMCommon
 					--- Message: ${phone} registered crm successfully --- Data: ${JSON.stringify(data)}`,
                 );
                 return true;
             } else {
                 buildProdLogger('error', 'register_crm_customer_fail.log').error(
-                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
+					--- Method: ${req.method} --- Common: CustomerCRMCommon
 					--- Message: ${phone} registered crm failure --- Error: ${JSON.stringify(error)}`,
                 );
                 return false;

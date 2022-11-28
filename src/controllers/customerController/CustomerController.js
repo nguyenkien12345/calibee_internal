@@ -128,10 +128,13 @@ const CustomerController = {
 
             const { name, province, address, email, district, street } = req.body;
 
-            let cities_data = await CallAPICommon.getAllCities();
-            let result_cities = [];
-            result_cities = JSON.parse(cities_data.data).data.cities;
-            let cityData = result_cities.find((x) => x.city_id.toString() === province.toString());
+            let cityData = null;
+            if (province) {
+                let cities_data = await CallAPICommon.getAllCities();
+                let result_cities = [];
+                result_cities = JSON.parse(cities_data.data).data.cities;
+                cityData = result_cities.find((x) => x.city_id.toString() === province.toString());
+            }
 
             let customer = await CustomerCRMCommon.onGetDetailCustomer(zohoId, res, next);
             if (customer.data.code === 3100) {

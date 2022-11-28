@@ -91,14 +91,16 @@ const WorkerController = {
 
             let data_worker_crm = await WorkerCRMCommon.onRegisterCRM(worker_crm, next);
             buildProdLogger('info', 'register_crm_worker_information.log').info(
-                `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+                `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
+				--- Method: ${req.method} --- Controller: WorkerController
 				--- Message: ${phone} register crm worker information --- Data: ${JSON.stringify(data_worker_crm)}`,
             );
 
             let { code, data, error } = data_worker_crm.data;
             if (code === 3000 && data) {
                 buildProdLogger('info', 'register_crm_worker_success.log').info(
-                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
+					--- Method: ${req.method} --- Controller: WorkerController
 					--- Message: ${phone} registered crm successfully --- Data: ${JSON.stringify(data)}`,
                 );
                 return res.status(200).json({
@@ -108,7 +110,8 @@ const WorkerController = {
                 });
             } else {
                 buildProdLogger('error', 'register_crm_worker_fail.log').error(
-                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
+					--- Method: ${req.method} --- Controller: WorkerController
 					--- Message: ${phone} registered crm failure --- Error: ${JSON.stringify(error)}`,
                 );
                 return res.json({
@@ -148,7 +151,8 @@ const WorkerController = {
                 let { code, data, error } = data_worker_crm.data;
                 if (code === 3000 && data) {
                     buildProdLogger('info', 'update_crm_worker_success.log').info(
-                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
+						--- Method: ${req.method} --- Controller: WorkerController
 						--- Message: ${zohoId} updated crm successfully --- Data: ${JSON.stringify(data)}`,
                     );
                     return res.status(200).json({
@@ -157,7 +161,8 @@ const WorkerController = {
                     });
                 } else {
                     buildProdLogger('error', 'update_crm_worker_fail.log').error(
-                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} 
+                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
+						--- Method: ${req.method} --- Controller: WorkerController
 						--- Message: ${zohoId} updated crm failure --- Error: ${JSON.stringify(error)}`,
                     );
                     return res.json({
@@ -264,7 +269,9 @@ const WorkerController = {
             let { password: password_user, createdAt, updatedAt, ...other } = worker.dataValues;
 
             buildProdLogger('info', 'crm_register_worker_success.log').info(
-                `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} --- Method: ${req.method} --- Message: ${phone} from crm registered successfully`,
+                `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
+				--- Method: ${req.method} --- Controller: WorkerController
+				--- Message: ${phone} from crm registered successfully`,
             );
 
             return res.status(201).json({
