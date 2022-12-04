@@ -93,6 +93,10 @@ const Customer = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: true,
         },
+        show_id: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+        },
     },
     {
         paranoid: true,

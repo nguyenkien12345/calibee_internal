@@ -121,6 +121,10 @@ const Workers = sequelize.define(
             type: DataTypes.STRING,
             allowNull: true,
         },
+        show_id: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
