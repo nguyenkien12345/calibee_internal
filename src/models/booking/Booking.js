@@ -166,6 +166,10 @@ const Booking = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: true,
         },
+        is_flag: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     },
     {
         paranoid: true,

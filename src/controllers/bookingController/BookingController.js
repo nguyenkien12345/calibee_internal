@@ -180,9 +180,6 @@ const BookingController = {
         try {
             let { Sale_Order_ID, Booking_ID, Worker_ID, Status } = req.body;
 
-            //if (!Sale_Order_ID) return res.status(400).json(error_missing_params('Sale_Order_ID'));
-            //if (!Booking_ID) return res.status(400).json(error_missing_params('Booking_ID'));
-
             // Update Sale_Order
             if (Sale_Order_ID) {
                 if (Status) {
@@ -200,14 +197,19 @@ const BookingController = {
 
                     await Helper.onUpdateSaleOrderCRM(Sale_Order_ID, data_update, req, next);
                 }
-            } else {
-                // Update Status Booking (In_Processing or Completed or Canceled)
+            }
+
+            // Update Status Booking (In_Processing or Completed or Canceled)
+            if (Booking_ID) {
                 if (Status) {
                     let data_update = {
                         Job_Status: Status,
                     };
 
-                    await Helper.onUpdateBookingCRM(Booking_ID[0], data_update, req, next);
+                    const length = Booking_ID.length;
+                    for (let i = 0; i < length; i++) {
+                        await Helper.onUpdateBookingCRM(Booking_ID[i], data_update, req, next);
+                    }
                 }
             }
 
