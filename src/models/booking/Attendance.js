@@ -42,6 +42,10 @@ const Attendance = sequelize.define(
             type: DataTypes.TEXT,
             defaultValue: null,
         },
+        worker_id: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: true,
+        },
     },
     {
         charset: 'utf8mb4',
