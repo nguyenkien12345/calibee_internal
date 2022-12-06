@@ -178,7 +178,7 @@ const BookingController = {
     // Update info booking to Zoho
     updateInfoBookingToCRM: async (req, res, next) => {
         try {
-            let { Sale_Order_ID, Booking_ID, Worker_ID, Status } = req.body;
+            let { Sale_Order_ID, Booking_ID, Worker_ID, Status, Check_In, Check_Out } = req.body;
 
             // Update Sale_Order
             if (Sale_Order_ID) {
@@ -205,6 +205,14 @@ const BookingController = {
                     let data_update = {
                         Job_Status: Status,
                     };
+
+                    if (Check_In) {
+                        data_update.Check_In = Check_In;
+                    }
+
+                    if (Check_Out) {
+                        data_update.Check_Out = Check_Out;
+                    }
 
                     const length = Booking_ID.length;
                     for (let i = 0; i < length; i++) {
