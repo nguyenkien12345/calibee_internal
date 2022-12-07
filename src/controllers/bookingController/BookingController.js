@@ -213,7 +213,7 @@ const BookingController = {
     // Update info booking to Zoho
     updateInfoBookingToCRM: async (req, res, next) => {
         try {
-            let { Sale_Order_ID, Booking_ID, Worker_ID, Status, Check_In, Check_Out } = req.body;
+            let { Sale_Order_ID, Booking_ID, Worker_ID, Status, Check_In, Check_Out, Contract_ID } = req.body;
 
             // Update Sale_Order
             if (Sale_Order_ID) {
@@ -228,6 +228,14 @@ const BookingController = {
                 if (Worker_ID) {
                     let data_update = {
                         Worker_ID: Worker_ID,
+                    };
+
+                    await Helper.onUpdateSaleOrderCRM(Sale_Order_ID, data_update, req, next);
+                }
+
+                if (Contract_ID) {
+                    let data_update = {
+                        Contract_ID: Contract_ID,
                     };
 
                     await Helper.onUpdateSaleOrderCRM(Sale_Order_ID, data_update, req, next);
