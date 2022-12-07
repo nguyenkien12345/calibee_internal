@@ -92,6 +92,41 @@ const Helper = {
             next(err);
         }
     },
+
+    // Function create contract in zoho
+    onCreateContractCRM: async (data_contract_crm, req, res, next) => {
+        try {
+            let { enviroment } = req.query;
+            enviroment = enviroment === 'PRO' ? 'order-management' : 'om-sandbox';
+
+            console.log('IN HELPER CREATE');
+            const url = `${base_url}/${enviroment}/form/Contracts`;
+            let accessToken = await getRefreshToken()
+                .then((data) => Promise.resolve(data))
+                .catch((err) => Promise.reject(err));
+            const options = {
+                method: 'POST',
+                body: JSON.stringify({
+                    data: {
+                        ...data_contract_crm,
+                    },
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Zoho-oauthtoken ${accessToken.access_token}`,
+                },
+            };
+            console.log('END HELPER CREATE');
+            const response = await fetch(url, options);
+            const data = await response.json();
+
+            console.log('data', data);
+
+            return data;
+        } catch (err) {
+            next(err);
+        }
+    },
 };
 
 const BookingController = {
@@ -232,6 +267,109 @@ const BookingController = {
         }
     },
 
+    // Create a contract in zoho
+    createContract: async (req, res, next) => {
+        try {
+            let {
+                booking_id_crm,
+                customer_id_crm,
+                //worker_id_crm,
+                service_category_id,
+                service_category_id_crm,
+                now_date,
+                start_day,
+                end_day,
+                week_days,
+                start_time,
+                end_time,
+                address,
+                location,
+                total_payment,
+            } = req.body;
+
+            if (!booking_id_crm) return res.status(400).json(error_missing_params('booking_id_crm'));
+            //if (!worker_id_crm) worker_id_crm = null;
+            if (!customer_id_crm) return res.status(400).json(error_missing_params('service_category_id'));
+            if (!service_category_id) return res.status(400).json(error_missing_params('service_category_id'));
+            if (!service_category_id_crm) return res.status(400).json(error_missing_params('service_category_id_crm'));
+            if (!now_date) return res.status(400).json(error_missing_params('now_date'));
+            if (!start_day) return res.status(400).json(error_missing_params('start_day'));
+            if (!end_day) return res.status(400).json(error_missing_params('end_day'));
+            if (!start_time) return res.status(400).json(error_missing_params('start_time'));
+            if (!end_time) return res.status(400).json(error_missing_params('end_time'));
+            if (!location) return res.status(400).json(error_missing_params('location'));
+            if (!total_payment) return res.status(400).json(error_missing_params('total_payment'));
+
+            const week_days_define = {
+                2: 'Mon',
+                3: 'Tue',
+                4: 'Wed',
+                5: 'Thu',
+                6: 'Fri',
+                7: 'Sat',
+                8: 'Sun',
+            };
+
+            const week_days_name = week_days.map((ele) => week_days_define[ele]);
+
+            // set up data before call API from Zoho
+            let data_contract_crm = {
+                Contract_ID: 'Auto Generate',
+                Contract_Owner: 'App',
+                Contract_Type: 'Cá nhân',
+                Contact_Name: customer_id_crm,
+                Service_Name: service_category_id_crm,
+                Signed_Date: now_date,
+                Contract_Value: total_payment,
+                Discount_Amount: 0,
+                Contract_Status: 'Deposit Paid',
+                City_Province: location,
+                Street: address,
+                Start_Date: start_day,
+                End_Date: end_day,
+                Week_Days: week_days_name,
+                Invoice_Details: [
+                    {
+                        Invoice_ID: booking_id_crm,
+                        Status: 'Sent',
+                        Account_Type: 'Other Current Liability',
+                        Invoice_Date: now_date,
+                        Start_Date: start_day,
+                        End_Date: end_day,
+                        Amount: total_payment,
+                    },
+                ],
+            };
+
+            for (let i = 0; i < week_days.length; i++) {
+                data_contract_crm[`From${week_days[i]}`] = start_time;
+                data_contract_crm[`To${week_days[i]}`] = end_time;
+            }
+
+            console.log('data_booking_crm', data_contract_crm);
+
+            console.log('CALL HELPER CREATE');
+            let data_respone = await Helper.onCreateContractCRM(data_contract_crm, req, res, next);
+            console.log('FINISH HELPER CREATE');
+            let { code, data, error } = data_respone;
+
+            console.log('data_respone', data_respone);
+            if (code === 3000 && data) {
+                return res.status(200).json({
+                    ...successCallBack,
+                    data: data,
+                });
+            } else {
+                return res.json({
+                    ...errorCallBackWithOutParams,
+                    error: error,
+                });
+            }
+        } catch (err) {
+            next(err);
+        }
+    },
+
     // Get A Booking In Zoho
     getBookingFromCRM: async (req, res, next) => {
         try {
@@ -268,163 +406,6 @@ const BookingController = {
                     error: error,
                 });
             }
-        } catch (err) {
-            next(err);
-        }
-    },
-
-    // When Zoho assign Worker to Bookings => save worker_id and update status = 2 of booking_detail
-    assignWorkerFromCRM: async (req, res, next) => {
-        try {
-            let { sale_order_id, worker_id } = req.body;
-
-            if (!sale_order_id) return res.status(400).json(error_missing_params('sale_order_id'));
-            if (!worker_id) return res.status(400).json(error_missing_params('worker_id'));
-
-            let booking = await BookingCommon.onGetBookingByID_CRM(sale_order_id);
-            if (!booking) {
-                return res.json(onBuildResponseErr('error_not_found_booking'));
-            }
-
-            let booking_detail = await BookingCommon.onGetBookingDetailByBookingID(booking.booking_id);
-            if (!booking_detail) {
-                return res.json(onBuildResponseErr('error_not_found_booking_detail'));
-            }
-
-            let worker = await WorkerCommon.onGetWorkerByID_CRM(worker_id);
-            if (!worker) {
-                return res.json(onBuildResponseErr('error_not_found_worker'));
-            }
-
-            booking_detail.worker_id = worker.worker_id;
-            booking_detail.status = 2;
-            await booking_detail.save();
-
-            return res.status(200).json({
-                ...successCallBack,
-                data: {
-                    success: true,
-                    booking_detail,
-                },
-            });
-        } catch (err) {
-            next(err);
-        }
-    },
-
-    // When Zoho enter completed shift for worker => update status = 2 of attendance
-    completedShiftFromCRM: async (req, res, next) => {
-        try {
-            let { sale_order_id, booking_id } = req.body;
-
-            if (!sale_order_id) return res.status(400).json(error_missing_params('sale_order_id'));
-            if (!booking_id) return res.status(400).json(error_missing_params('worker_id'));
-
-            let booking = await BookingCommon.onGetBookingByID_CRM(sale_order_id);
-            if (!booking) {
-                return res.json(onBuildResponseErr('error_not_found_booking'));
-            }
-
-            let booking_detail = await BookingCommon.onGetBookingDetailByBookingID(booking.booking_id);
-            if (!booking_detail) {
-                return res.json(onBuildResponseErr('error_not_found_booking_detail'));
-            }
-
-            const basic = [1, 2, 3, 4];
-            const subscription = [5, 6];
-            let number_job = -1;
-            if (subscription.includes(booking.service_category_id)) {
-                let booking_ids = booking_detail.app_ids ? JSON.parse(booking_detail.app_ids) : [];
-
-                number_job = booking_ids.findIndex(booking_id);
-
-                if (number_job === booking_detail.current_day) {
-                    booking_detail.status = 4;
-                } else {
-                    booking_detail.status = 3;
-                }
-            } else {
-                booking_detail.status = 4;
-            }
-            await booking_detail.save();
-
-            let attendance = await Attendances.findOne({
-                where: {
-                    booking_detail_id: booking_detail.booking_detail_id,
-                    number_job: number_job,
-                },
-            });
-
-            if (attendance) {
-                if (!attendance.check_in) {
-                    attendance.check_in = moment('2022/11/14 ' + booking_detail.start_time).format('HH:mm:ss');
-                }
-                if (!attendance.check_out) {
-                    attendance.check_out = moment('2022/11/14 ' + booking_detail.start_time)
-                        .add(booking.total_time, 'hours')
-                        .format('HH:mm:ss');
-                }
-                attendance.status = 2;
-
-                await attendance.save();
-            } else {
-                attendance = await Attendances.create({
-                    booking_detail_id: booking_detail.booking_detail_id,
-                    working_day: moment().add(7, 'hours').format('YYYY-MM-DD'),
-                    check_in: moment('2022/11/14 ' + booking_detail.start_time).format('HH:mm:ss'),
-                    check_out: moment('2022/11/14 ' + booking_detail.start_time)
-                        .add(booking.total_time, 'hours')
-                        .format('HH:mm:ss'),
-                    status: 2,
-                    number_job: number_job,
-                });
-            }
-
-            return res.status(200).json({
-                ...successCallBack,
-                data: {
-                    success: true,
-                    attendance,
-                },
-            });
-        } catch (err) {
-            next(err);
-        }
-    },
-
-    // When Zoho confirmed booing => update status = 1 of booking_detail
-    confirmBookingFromCRM: async (req, res, next) => {
-        try {
-            let { sale_order_id, data } = req.body;
-
-            if (!sale_order_id) return res.status(400).json(error_missing_params('sale_order_id'));
-            if (!data) return res.status(400).json(error_missing_params('data'));
-
-            let booking = await BookingCommon.onGetBookingByID_CRM(sale_order_id);
-            if (!booking) {
-                return res.json(onBuildResponseErr('error_not_found_booking'));
-            }
-
-            let booking_detail = await BookingCommon.onGetBookingDetailByBookingID(booking.booking_id);
-            if (!booking_detail) {
-                return res.json(onBuildResponseErr('error_not_found_booking_detail'));
-            }
-
-            let app_ids = Object.keys(data);
-            let zoho_ids = Object.values(data);
-
-            booking_detail.app_ids = JSON.stringify(app_ids);
-            // booking_detail.zoho_ids = JSON.stringify(zoho_ids);
-            booking_detail.status = 1;
-            await booking_detail.save();
-
-            return res.status(200).json({
-                ...successCallBack,
-                data: {
-                    success: true,
-                    booking_detail,
-                },
-            });
         } catch (err) {
             next(err);
         }

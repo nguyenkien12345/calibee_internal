@@ -170,6 +170,10 @@ const Booking = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        contract_id: {
+            type: DataTypes.STRING(100),
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
