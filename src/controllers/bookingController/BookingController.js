@@ -350,8 +350,9 @@ const BookingController = {
             };
 
             for (let i = 0; i < week_days.length; i++) {
-                data_contract_crm[`From${week_days[i]}`] = start_time;
-                data_contract_crm[`To${week_days[i]}`] = end_time;
+                let index = week_days[i] === 8 ? 1 : week_days[i];
+                data_contract_crm[`From${index}`] = start_time;
+                data_contract_crm[`To${index}`] = end_time;
             }
 
             console.log('data_booking_crm', data_contract_crm);
