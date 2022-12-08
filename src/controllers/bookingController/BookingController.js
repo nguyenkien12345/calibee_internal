@@ -323,7 +323,7 @@ const BookingController = {
             // set up data before call API from Zoho
             let data_contract_crm = {
                 Contract_ID: 'Auto Generate',
-                Contract_Owner: 'App',
+                Contract_Owner: 'tracy.nguyen@wolfsolutions.vn',
                 Contract_Type: 'Cá nhân',
                 Contact_Name: customer_id_crm,
                 Service_Name: service_category_id_crm,
