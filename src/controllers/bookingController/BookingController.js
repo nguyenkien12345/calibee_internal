@@ -347,6 +347,7 @@ const BookingController = {
                         Amount: total_payment,
                     },
                 ],
+                Percent_for_worker: 80,
             };
 
             for (let i = 0; i < week_days.length; i++) {
