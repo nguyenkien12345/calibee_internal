@@ -79,7 +79,7 @@ const WorkerController = {
                 Mobile: phone.replace('0', '+84'),
                 Email: '',
                 Gender: '',
-                Lead_Source: 'Form Submission',
+                Lead_Source: 'App',
                 Lead_Status: 'Capturing',
                 Nid: nid ? nid : '',
                 Address: address ? address : '',
