@@ -341,6 +341,7 @@ const BookingController = {
                 Contract_Status: 'Deposit Paid',
                 City_Province: location,
                 Street: street,
+                District: district,
                 Start_Date: start_day,
                 End_Date: end_day,
                 Week_Days: week_days_name,
