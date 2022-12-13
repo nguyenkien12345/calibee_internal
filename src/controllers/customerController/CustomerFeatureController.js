@@ -65,8 +65,10 @@ const CustomerFeatureController = {
                 start_time,
                 end_time,
                 location,
+                district,
                 product_code_name,
                 total_payment,
+                address,
             } = req.body;
 
             if (!customer_id) return res.status(400).json(error_missing_params('customer_id'));
@@ -80,8 +82,15 @@ const CustomerFeatureController = {
             if (!start_time) return res.status(400).json(error_missing_params('start_time'));
             if (!end_time) return res.status(400).json(error_missing_params('end_time'));
             if (!location) return res.status(400).json(error_missing_params('location'));
+            if (!district) return res.status(400).json(error_missing_params('district'));
             //if (!product_code_name) return res.status(400).json(error_missing_params('product_code_name'));
             if (!total_payment) return res.status(400).json(error_missing_params('total_payment'));
+
+            let address_split = address.split(', ');
+            let street = '';
+            for (let i = 0; i < address_split.length - 4; i++) {
+                street = i === 0 ? street + address_split[i] : street + ', ' + address_split[i];
+            }
 
             // set up data before call API from Zoho
             let data_booking_crm = {
@@ -96,6 +105,8 @@ const CustomerFeatureController = {
                 Start: start_time,
                 End_Time: end_time,
                 Location: location,
+                District: district,
+                Street: street,
                 App_ID: customer_id,
                 Item_Rates_Are: 'Tax Inclusive',
                 Source: 'App',

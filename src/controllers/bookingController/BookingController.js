@@ -292,6 +292,7 @@ const BookingController = {
                 end_time,
                 address,
                 location,
+                district,
                 total_payment,
             } = req.body;
 
@@ -306,6 +307,7 @@ const BookingController = {
             if (!start_time) return res.status(400).json(error_missing_params('start_time'));
             if (!end_time) return res.status(400).json(error_missing_params('end_time'));
             if (!location) return res.status(400).json(error_missing_params('location'));
+            if (!district) return res.status(400).json(error_missing_params('district'));
             if (!total_payment) return res.status(400).json(error_missing_params('total_payment'));
 
             const week_days_define = {
@@ -320,6 +322,12 @@ const BookingController = {
 
             const week_days_name = week_days.map((ele) => week_days_define[ele]);
 
+            let address_split = address.split(', ');
+            let street = '';
+            for (let i = 0; i < address_split.length - 4; i++) {
+                street = i === 0 ? street + address_split[i] : street + ', ' + address_split[i];
+            }
+
             // set up data before call API from Zoho
             let data_contract_crm = {
                 Contract_ID: 'Auto Generate',
@@ -332,7 +340,7 @@ const BookingController = {
                 Discount_Amount: 0,
                 Contract_Status: 'Deposit Paid',
                 City_Province: location,
-                Street: address,
+                Street: street,
                 Start_Date: start_day,
                 End_Date: end_day,
                 Week_Days: week_days_name,
