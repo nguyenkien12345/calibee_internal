@@ -324,7 +324,7 @@ const BookingController = {
 
             let address_split = address.split(', ');
             let street = '';
-            for (let i = 0; i < address_split.length - 4; i++) {
+            for (let i = 0; i <= address_split.length - 4; i++) {
                 street = i === 0 ? street + address_split[i] : street + ', ' + address_split[i];
             }
 
