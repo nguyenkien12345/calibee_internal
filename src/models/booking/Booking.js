@@ -174,6 +174,22 @@ const Booking = sequelize.define(
             type: DataTypes.STRING(100),
             allowNull: true,
         },
+        own_tools: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        foreign_language: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        product_code_name: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        extra_service_fee_details: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
