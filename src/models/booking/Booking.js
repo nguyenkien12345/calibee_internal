@@ -190,6 +190,14 @@ const Booking = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: true,
         },
+        min_recomendation_max: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        origin_total_payment: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
