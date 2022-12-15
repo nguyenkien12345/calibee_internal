@@ -73,6 +73,10 @@ const BookingDetail = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: true,
         },
+        report_time: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
