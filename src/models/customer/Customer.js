@@ -43,7 +43,7 @@ const Customer = sequelize.define(
             allowNull: true,
         },
         address: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.TEXT,
             allowNull: true,
         },
         avatar: {

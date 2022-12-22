@@ -19,7 +19,7 @@ const Booking = sequelize.define(
             allowNull: true,
         },
         address: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.TEXT,
             allowNull: true,
         },
         province_id: {
