@@ -46,6 +46,46 @@ const Attendance = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
+        in_lat: {
+            type: DataTypes.FLOAT,
+            allowNull: true,
+        },
+        in_long: {
+            type: DataTypes.FLOAT,
+            allowNull: true,
+        },
+        out_lat: {
+            type: DataTypes.FLOAT,
+            allowNull: true,
+        },
+        out_long: {
+            type: DataTypes.FLOAT,
+            allowNull: true,
+        },
+        in_distance: {
+            type: DataTypes.FLOAT,
+            allowNull: true,
+        },
+        out_distance: {
+            type: DataTypes.FLOAT,
+            allowNull: true,
+        },
+        in_distance_coordinates: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        out_distance_coordinates: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        history_check_in: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        history_check_out: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
     },
     {
         charset: 'utf8mb4',
