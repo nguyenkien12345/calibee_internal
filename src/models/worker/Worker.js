@@ -125,6 +125,18 @@ const Workers = sequelize.define(
             type: DataTypes.STRING(100),
             allowNull: true,
         },
+        is_op: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
+        total_stars: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0,
+        },
+        total_feedbacks: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            defaultValue: 0,
+        },
     },
     {
         paranoid: true,
