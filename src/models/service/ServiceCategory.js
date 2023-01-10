@@ -36,6 +36,10 @@ const ServiceCategory = sequelize.define('service_category', {
         type: DataTypes.STRING(100),
         allowNull: true,
     },
+    priority_sort: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+    },
 });
 
 // Service Category (1 -> n) Booking
