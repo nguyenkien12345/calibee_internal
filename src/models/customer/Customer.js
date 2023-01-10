@@ -97,6 +97,14 @@ const Customer = sequelize.define(
             type: DataTypes.STRING(100),
             allowNull: true,
         },
+        total_stars: {
+            type: DataTypes.FLOAT,
+            defaultValue: 0,
+        },
+        total_feedbacks: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            defaultValue: 0,
+        },
     },
     {
         paranoid: true,
