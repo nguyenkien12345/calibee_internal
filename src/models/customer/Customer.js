@@ -75,7 +75,7 @@ const Customer = sequelize.define(
             allowNull: true,
         },
         language_on_devices: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.TEXT,
             allowNull: true,
         },
         is_test: {
