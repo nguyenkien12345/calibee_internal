@@ -198,6 +198,10 @@ const Booking = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
+        handwash: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
     },
     {
         paranoid: true,
