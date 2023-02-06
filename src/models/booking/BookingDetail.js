@@ -77,6 +77,10 @@ const BookingDetail = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
+        sup_status: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
