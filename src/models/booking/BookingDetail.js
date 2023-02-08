@@ -81,6 +81,10 @@ const BookingDetail = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
+		user_add: {
+			type: DataTypes.INTEGER.UNSIGNED,
+			allowNull: true,
+		}
     },
     {
         paranoid: true,
