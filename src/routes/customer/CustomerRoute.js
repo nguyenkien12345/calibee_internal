@@ -12,4 +12,6 @@ CustomerRouter.get('/crm', security.verifySecurity, CustomerController.getAllCus
 CustomerRouter.post('/create-booking-crm', security.verifySecurity, CustomerFeatureController.createBooking);
 CustomerRouter.get('/', security.verifySecurity, CustomerController.getAllCustomer);
 
+CustomerRouter.post('/create-booking-zoho', security.verifySecurity, CustomerFeatureController.createBookingZoho);
+
 module.exports = CustomerRouter;
