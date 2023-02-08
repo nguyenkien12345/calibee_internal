@@ -183,13 +183,6 @@ const CustomerFeatureController = {
 			if (!Booking_Payable_to_Worker) return res.status(400).json(error_missing_params('Booking_Payable_to_Worker'));
 			if (!Worker_Information) return res.status(400).json(error_missing_params('Worker_Information'));
 
-			Worker_Information = [
-				{
-				  "Worker_Name":"Cao Khanh Duong",
-				  "Mobile":"0123456789",
-				  "CMND":"034658664"
-				}
-			]
 			const formData = new FormData();
 			formData.append("Booking_ID", Booking_ID);
 			formData.append("Customer_Name", Customer_Name);
