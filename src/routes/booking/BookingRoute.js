@@ -7,4 +7,6 @@ BookingRouter.post('/update-info-booking-to-crm', security.verifySecurity, Booki
 BookingRouter.get('/booking-from-crm', security.verifySecurity, BookingController.getBookingFromCRM);
 BookingRouter.post('/create-contract', security.verifySecurity, BookingController.createContract);
 
+CustomerRouter.post('/create-job-zoho', security.verifySecurity, BookingController.createJobZoho);
+
 module.exports = BookingRouter;
