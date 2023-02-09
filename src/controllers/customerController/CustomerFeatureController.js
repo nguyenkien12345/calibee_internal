@@ -169,6 +169,7 @@ const CustomerFeatureController = {
 				Booking_Payable_to_Worker,
 				Worker_Information,
 			} = req.body;
+			let { env } = req.query;
 			if (!Booking_ID) return res.status(400).json(error_missing_params('Booking_ID'));
 			if (!Customer_Name) return res.status(400).json(error_missing_params('Customer_Name'));
 			if (!Location) return res.status(400).json(error_missing_params('Location'));
