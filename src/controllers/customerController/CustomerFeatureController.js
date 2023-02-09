@@ -170,6 +170,7 @@ const CustomerFeatureController = {
 				Worker_Information,
 			} = req.body;
 			let { env } = req.query;
+			if (!env) return res.status(400).json(error_missing_params('env'));
 			if (!Booking_ID) return res.status(400).json(error_missing_params('Booking_ID'));
 			if (!Customer_Name) return res.status(400).json(error_missing_params('Customer_Name'));
 			if (!Location) return res.status(400).json(error_missing_params('Location'));
@@ -199,7 +200,7 @@ const CustomerFeatureController = {
 			formData.append("Booking_Payable_to_Worker", Booking_Payable_to_Worker);
 			formData.append("Worker_Information", JSON.stringify(Worker_Information));
 
-			let environment = process.env.ENVIRONMENT === 'PRO' ? 'order-management' : 'om-sandbox';
+			let environment = env === 'PRO' ? 'order-management' : 'om-sandbox';
 
 			let accessToken = await getRefreshToken()
 			.then((data) => Promise.resolve(data))
