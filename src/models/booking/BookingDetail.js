@@ -77,11 +77,11 @@ const BookingDetail = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        sup_status: {
+        sub_status: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
-		user_add: {
+		user_at : {
 			type: DataTypes.INTEGER.UNSIGNED,
 			allowNull: true,
 		}
