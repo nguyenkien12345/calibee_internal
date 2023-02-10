@@ -8,6 +8,6 @@ BookingRouter.get('/booking-from-crm', security.verifySecurity, BookingControlle
 BookingRouter.post('/create-contract', security.verifySecurity, BookingController.createContract);
 
 BookingRouter.post('/create-job-zoho', security.verifySecurity, BookingController.createJobZoho);
-BookingRouter.patch('/update-job-zoho', security.verifySecurity, BookingController.updateJobZoho);
+BookingRouter.post('/update-job-zoho', security.verifySecurity, BookingController.updateJobZoho);
 
 module.exports = BookingRouter;

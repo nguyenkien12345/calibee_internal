@@ -86,6 +86,14 @@ const Attendance = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: true,
         },
+		app_ids: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        job_id: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
     },
     {
         charset: 'utf8mb4',
