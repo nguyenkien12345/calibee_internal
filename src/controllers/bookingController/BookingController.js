@@ -480,7 +480,14 @@ const BookingController = {
 			.then((data) => Promise.resolve(data))
 			.catch((err) => Promise.reject(err));
 
-			const url = `${base_url}/${environment}/form/Jobs1`;
+			// const url = `${base_url}/${environment}/form/Jobs1`;
+
+			let url = null;
+			if (env === 'PRO') {
+				url = `${base_url}/${environment}/form/Jobs`;
+			} else {
+				url = `${base_url}/${environment}/form/Jobs1`;
+			}
 
 			const options = {
 			    method: 'POST',
