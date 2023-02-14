@@ -304,9 +304,15 @@ const CustomerFeatureController = {
 			.then((data) => Promise.resolve(data))
 			.catch((err) => Promise.reject(err));
 
-			const url = `${base_url}/${environment}/report/All_Bookings1/${App_Id_Booking}`;
-			console.log(url);
-			console.log(data_send)
+			// const url = `${base_url}/${environment}/report/All_Bookings1/${App_Id_Booking}`;
+
+			let url = null;
+			if (env === 'PRO') {
+				url = `${base_url}/${environment}/report/Bookings_Report/${App_Id_Booking}`;
+			} else {
+				url = `${base_url}/${environment}/report/All_Bookings1/${App_Id_Booking}`;
+			}
+
 			const options = {
 			    method: 'PATCH',
 			    body: JSON.stringify({
