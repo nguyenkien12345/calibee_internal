@@ -99,7 +99,7 @@ const Booking = sequelize.define(
 			allowNull: true,
 		},
 		worker_earnings: {
-			type: DataTypes.INTEGER.UNSIGNED,
+			type: DataTypes.FLOAT.UNSIGNED,
 			allowNull: true,
 		},
 		service_fee: {
