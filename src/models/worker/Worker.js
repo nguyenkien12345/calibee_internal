@@ -137,6 +137,11 @@ const Workers = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             defaultValue: 0,
         },
+		ref_code: {
+            type: DataTypes.STRING(100),
+			allowNull: false,
+			unique: false,
+        },
     },
     {
         paranoid: true,
