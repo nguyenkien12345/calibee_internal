@@ -86,6 +86,34 @@ const Attendance = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: true,
         },
+        app_ids: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        job_id: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        in_images: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        out_images: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        content_in_images: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        content_out_images: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        compensate_info: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
     },
     {
         charset: 'utf8mb4',
