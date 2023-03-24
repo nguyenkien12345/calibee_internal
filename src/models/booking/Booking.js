@@ -218,23 +218,23 @@ const Booking = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: true,
         },
-	},
-	{
-		paranoid: true,
-		charset: 'utf8mb4',
-		collate: 'utf8mb4_general_ci',
-	},
+    },
+    {
+        paranoid: true,
+        charset: 'utf8mb4',
+        collate: 'utf8mb4_general_ci',
+    },
 );
 
 // Booking (1 -> 1) Booking Detail
 Booking.hasOne(BookingDetail, {
-	as: 'booking_detail',
-	foreignKey: 'booking_id',
+    as: 'booking_detail',
+    foreignKey: 'booking_id',
 });
 
 BookingDetail.belongsTo(Booking, {
-	as: 'booking',
-	foreignKey: 'booking_id',
+    as: 'booking',
+    foreignKey: 'booking_id',
 });
 
 module.exports = Booking;

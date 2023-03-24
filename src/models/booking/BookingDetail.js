@@ -81,10 +81,14 @@ const BookingDetail = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
-		user_at : {
-			type: DataTypes.INTEGER.UNSIGNED,
-			allowNull: true,
-		}
+        user_at: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: true,
+        },
+        payment_bills: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
