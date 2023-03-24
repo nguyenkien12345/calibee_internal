@@ -3,9 +3,9 @@ const sequelize = require('../../config/database');
 const BookingDetail = require('../../models/booking/BookingDetail');
 
 const Booking = sequelize.define(
-    'booking',
-    {
-        booking_id: {
+	'booking',
+	{
+		booking_id: {
             type: DataTypes.INTEGER.UNSIGNED,
             primaryKey: true,
             autoIncrement: true,
@@ -26,7 +26,7 @@ const Booking = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
-        bulding_floor: {
+        building_floor: {
             type: DataTypes.STRING(100),
             allowNull: true,
         },
@@ -150,8 +150,8 @@ const Booking = sequelize.define(
             type: DataTypes.STRING(100),
             allowNull: true,
         },
-        momo_order_id: {
-            type: DataTypes.STRING(100),
+        payment_id: {
+            type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
         show_id: {
