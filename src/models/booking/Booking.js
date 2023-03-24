@@ -218,6 +218,10 @@ const Booking = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: true,
         },
+        booking_language: {
+            type: DataTypes.STRING(10),
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
