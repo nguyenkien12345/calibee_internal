@@ -203,30 +203,52 @@ const CustomerFeatureController = {
 
 			let environment = env === 'PRO' ? 'order-management' : 'om-sandbox';
 
-			let accessToken = await getRefreshToken()
-			.then((data) => Promise.resolve(data))
-			.catch((err) => Promise.reject(err));
+			// let accessToken = await getRefreshToken()
+			// .then((data) => Promise.resolve(data))
+			// .catch((err) => Promise.reject(err));
 
 			const url = `${base_url}/${environment}/form/Bookings1`;
 
-			const options = {
-			    method: 'POST',
-			    body: formData,
-			    headers: {
-			        Authorization: `Zoho-oauthtoken ${accessToken.access_token}`,
-			    },
+			let check_failed = true;
+
+			let data = null;
+			while (check_failed) {
+				let access_token_crm = await AppConfigs.findOne({
+					where: {
+						name : 'access_token_crm'
+					}
+				});
+
+				const options = {
+					method: 'POST',
+					body: formData,
+					headers: {
+						// Authorization: `Zoho-oauthtoken ${accessToken.access_token}`,
+						Authorization: `Zoho-oauthtoken ${access_token_crm.value}`,
+					},
+				};
+				const response = await fetch(url, options).catch(err => {return res.status(500).json({status: false, message: err})});
+				data = await response.json();
+
+				if (data.code == 1030) {
+					let accessToken = await getRefreshToken()
+					.then((data) => Promise.resolve(data))
+					.catch((err) => Promise.reject(err));
+
+					access_token_crm.value = accessToken.access_token;
+					await access_token_crm.save();
+				} else {
+					check_failed = false;
+				}
+
+				buildProdLogger('info', 'DataCRM/data.log').info(
+					`
+					--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+					--- Data: ${JSON.stringify(data)}
+					`,
+				);
 			};
 
-			const response = await fetch(url, options).catch(err => {return res.status(500).json({status: false, message: err})});
-			const data = await response.json();
-
-			buildProdLogger('info', 'DataCRM/data.log').info(
-				`
-				--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
-				--- Data: ${JSON.stringify(data)}
-				`,
-			);
-			
 			if (!data) {
 				return res.status(500).json({
 					status: false,
