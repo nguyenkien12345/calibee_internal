@@ -16,7 +16,7 @@ const getRefreshToken = async () => {
 		buildProdLogger('info', 'getRefreshTokenZoho/Success.log').info(
 			`
 			--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
-			--- Data: ${data}
+			--- Data: ${JSON.stringify(data)}
 			--- Access_token: ${data.access_token}`,
 		);
         return {
@@ -26,7 +26,7 @@ const getRefreshToken = async () => {
 		buildProdLogger('info', 'getRefreshTokenZoho/Failed.log').info(
 			`
 			--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
-			--- Data: ${data}`,
+			--- Data: ${JSON.stringify(data)}`,
 		);
         return {
             access_token: null,
