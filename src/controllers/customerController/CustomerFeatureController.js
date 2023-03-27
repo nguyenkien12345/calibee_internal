@@ -205,48 +205,33 @@ const CustomerFeatureController = {
 
 			const url = `${base_url}/${environment}/form/Bookings1`;
 
-			let check_failed = true;
-			let data = null;
-			while (check_failed) {
-				let access_token_crm = await AppConfigs.findOne({
-					where: {
-						name : 'access_token_crm'
-					}
-				});
+			// let accessToken = await getRefreshToken(Booking_ID)
+			// .then((data) => Promise.resolve(data))
+			// .catch((err) => Promise.reject(err));
 
-				const options = {
-					method: 'POST',
-					body: formData,
-					headers: {
-						Authorization: `Zoho-oauthtoken ${access_token_crm.value}`,
-					},
-				};
-				const response = await fetch(url, options).catch(err => {return res.status(500).json({status: false, message: err})});
-				data = await response.json();
-
-				if (data.code == 1030) {
-					let accessToken = await getRefreshToken()
-					.then((data) => Promise.resolve(data))
-					.catch((err) => Promise.reject(err));
-
-					access_token_crm.value = accessToken.access_token;
-					await access_token_crm.save();
-				} else {
-					check_failed = false;
+			let access_token_crm = await AppConfigs.findOne({
+				where: {
+					name: 'access_token_crm'
 				}
+			});
 
-				buildProdLogger('info', 'DataCRM/data.log').info(
-					`
-					--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
-					--- Booking_ID: ${Booking_ID}
-					--- access_token_crm.value: ${access_token_crm.value}
-					--- Data: ${JSON.stringify(data)}
-					--- Code: ${data.code}
-					--- Check: ${data.code == 1030}
-					--- check_failed: ${check_failed}
-					`,
-				);
+			const options = {
+				method: 'POST',
+				body: formData,
+				headers: {
+					Authorization: `Zoho-oauthtoken ${access_token_crm.value}`,
+				},
 			};
+			const response = await fetch(url, options).catch(err => {return res.status(500).json({status: false, message: err})});
+			data = await response.json();
+
+			buildProdLogger('info', 'DataCRM/data.log').info(
+				`
+				--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+				--- data: ${JSON.stringify(data)}
+				--- access_token_crm.value: ${access_token_crm.value}
+				`,
+			);
 
 			if (!data) {
 				return res.status(500).json({

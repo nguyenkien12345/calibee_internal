@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 dotenv.config();
 
 const { buildProdLogger } = require('../../logger/index');
-const getRefreshToken = async () => {
+const getRefreshToken = async (Booking_ID) => {
     const url = `${process.env.BASE_URL_CREATOR_ZOHO_OAUTH}/token?refresh_token=1000.d2f013387bda3934e51a307aea14e888.71f3ebdd57487f286a92f7eb7447d964&client_id=1000.NX6OY0L75IBNKZGIJZKV7UTYJS3HGT&client_secret=cf3facc6104b7caf5466f12fa87909a7a438802132&grant_type=refresh_token`;
     const options = {
         method: 'POST',
@@ -16,6 +16,7 @@ const getRefreshToken = async () => {
 		buildProdLogger('info', 'DataCRM/getRefreshToken_success.log').info(
 			`
 			--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+			--- Booking_ID: ${Booking_ID}
 			--- data: ${JSON.stringify(data)}
 			--- data.access_token: ${data.access_token}
 			`,
@@ -27,6 +28,7 @@ const getRefreshToken = async () => {
 		buildProdLogger('info', 'DataCRM/getRefreshToken_failed.log').info(
 			`
 			--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+			--- Booking_ID: ${Booking_ID}
 			--- data: ${JSON.stringify(data)}
 			`,
 		);
