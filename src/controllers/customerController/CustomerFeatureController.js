@@ -230,6 +230,8 @@ const CustomerFeatureController = {
 					--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
 					--- access_token_crm.value: ${access_token_crm.value}
 					--- Data: ${JSON.stringify(data)}
+					--- Code: ${data.code}
+					--- Check: ${data.code == 1030}
 					`,
 				);
 
