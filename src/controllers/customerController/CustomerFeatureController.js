@@ -224,17 +224,6 @@ const CustomerFeatureController = {
 				const response = await fetch(url, options).catch(err => {return res.status(500).json({status: false, message: err})});
 				data = await response.json();
 
-				buildProdLogger('info', 'DataCRM/data.log').info(
-					`
-					--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
-					--- Booking_ID: ${Booking_ID}
-					--- access_token_crm.value: ${access_token_crm.value}
-					--- Data: ${JSON.stringify(data)}
-					--- Code: ${data.code}
-					--- Check: ${data.code == 1030}
-					`,
-				);
-
 				if (data.code == 1030) {
 					let accessToken = await getRefreshToken()
 					.then((data) => Promise.resolve(data))
@@ -245,6 +234,18 @@ const CustomerFeatureController = {
 				} else {
 					check_failed = false;
 				}
+
+				buildProdLogger('info', 'DataCRM/data.log').info(
+					`
+					--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+					--- Booking_ID: ${Booking_ID}
+					--- access_token_crm.value: ${access_token_crm.value}
+					--- Data: ${JSON.stringify(data)}
+					--- Code: ${data.code}
+					--- Check: ${data.code == 1030}
+					--- check_failed: ${check_failed}
+					`,
+				);
 			};
 
 			if (!data) {
