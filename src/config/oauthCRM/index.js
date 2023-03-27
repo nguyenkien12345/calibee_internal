@@ -1,4 +1,5 @@
 const dotenv = require('dotenv');
+const moment = require('moment');
 const fetch = require('node-fetch');
 
 dotenv.config();
@@ -12,10 +13,21 @@ const getRefreshToken = async () => {
     const response = await fetch(url, options);
     const data = await response.json();
     if (data !== null) {
+		buildProdLogger('info', 'getRefreshTokenZoho/Success.log').info(
+			`
+			--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+			--- Data: ${data}
+			--- Access_token: ${data.access_token}`,
+		);
         return {
             access_token: data.access_token,
         };
     } else {
+		buildProdLogger('info', 'getRefreshTokenZoho/Failed.log').info(
+			`
+			--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+			--- Data: ${data}`,
+		);
         return {
             access_token: null,
         };
