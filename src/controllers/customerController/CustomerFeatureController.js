@@ -4,6 +4,8 @@ const FormData = require('form-data');
 dotenv.config();
 
 const AppConfigs = require('../../models/config/AppConfig');
+const { buildProdLogger } = require('../../logger/index');
+
 
 const { getRefreshToken } = require('../../config/oauthCRM');
 const { successCallBack } = require('../../config/response/ResponseSuccess');
