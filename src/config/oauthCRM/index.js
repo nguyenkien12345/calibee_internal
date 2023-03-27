@@ -16,7 +16,7 @@ const getRefreshToken = async () => {
 		buildProdLogger('info', 'DataCRM/getRefreshToken_success.log').info(
 			`
 			--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
-			--- data: ${data}
+			--- data: ${JSON.stringify(data)}
 			--- data.access_token: ${data.access_token}
 			`,
 		);
@@ -27,7 +27,7 @@ const getRefreshToken = async () => {
 		buildProdLogger('info', 'DataCRM/getRefreshToken_failed.log').info(
 			`
 			--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
-			--- data: ${data}
+			--- data: ${JSON.stringify(data)}
 			`,
 		);
         return {
