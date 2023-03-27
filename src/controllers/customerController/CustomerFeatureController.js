@@ -206,7 +206,6 @@ const CustomerFeatureController = {
 			const url = `${base_url}/${environment}/form/Bookings1`;
 
 			let check_failed = true;
-
 			let data = null;
 			while (check_failed) {
 				let access_token_crm = await AppConfigs.findOne({
@@ -228,6 +227,7 @@ const CustomerFeatureController = {
 				buildProdLogger('info', 'DataCRM/data.log').info(
 					`
 					--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+					--- Booking_ID: ${Booking_ID}
 					--- access_token_crm.value: ${access_token_crm.value}
 					--- Data: ${JSON.stringify(data)}
 					--- Code: ${data.code}
