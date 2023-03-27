@@ -203,10 +203,6 @@ const CustomerFeatureController = {
 
 			let environment = env === 'PRO' ? 'order-management' : 'om-sandbox';
 
-			// let accessToken = await getRefreshToken()
-			// .then((data) => Promise.resolve(data))
-			// .catch((err) => Promise.reject(err));
-
 			const url = `${base_url}/${environment}/form/Bookings1`;
 
 			let check_failed = true;
@@ -223,12 +219,19 @@ const CustomerFeatureController = {
 					method: 'POST',
 					body: formData,
 					headers: {
-						// Authorization: `Zoho-oauthtoken ${accessToken.access_token}`,
 						Authorization: `Zoho-oauthtoken ${access_token_crm.value}`,
 					},
 				};
 				const response = await fetch(url, options).catch(err => {return res.status(500).json({status: false, message: err})});
 				data = await response.json();
+
+				buildProdLogger('info', 'DataCRM/data.log').info(
+					`
+					--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+					--- access_token_crm.value: ${access_token_crm.value}
+					--- Data: ${JSON.stringify(data)}
+					`,
+				);
 
 				if (data.code == 1030) {
 					let accessToken = await getRefreshToken()
@@ -240,13 +243,6 @@ const CustomerFeatureController = {
 				} else {
 					check_failed = false;
 				}
-
-				buildProdLogger('info', 'DataCRM/data.log').info(
-					`
-					--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
-					--- Data: ${JSON.stringify(data)}
-					`,
-				);
 			};
 
 			if (!data) {
