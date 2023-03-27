@@ -1,22 +1,20 @@
 const dotenv = require('dotenv');
-const FormData = require('form-data');
-
-const CustomerCommon = require('../common/CustomerCommon');
-const CustomerCRMCommon = require('../common/CustomerCRMCommon');
-const { successCallBack } = require('../../config/response/ResponseSuccess');
 const fetch = require('node-fetch');
-const { errorCallBackWithOutParams, error_missing_params } = require('../../config/response/ResponseError');
-const { getRefreshToken } = require('../../config/oauthCRM');
-const { addListener } = require('nodemon');
-
+const FormData = require('form-data');
 dotenv.config();
+
+const AppConfigs = require('../../models/config/AppConfig');
+
+const { getRefreshToken } = require('../../config/oauthCRM');
+const { successCallBack } = require('../../config/response/ResponseSuccess');
+const { errorCallBackWithOutParams, error_missing_params } = require('../../config/response/ResponseError');
 
 const base_url = process.env.BASE_URL_CREATOR_ZOHO;
 
 const basic_services = [1, 2, 3, 4];
 const subscription_service = [5, 6];
 
-const Hepler = {
+const Helper = {
 	onCreateBookingCRM: async (data_booking_crm, req, res, next) => {
 		try {
 			let { enviroment } = req.query;
@@ -131,7 +129,7 @@ const CustomerFeatureController = {
 			console.log('data_booking_crm', data_booking_crm);
 
 			console.log('CALL HELPER CREATE');
-			let data_respone = await Hepler.onCreateBookingCRM(data_booking_crm, req, res, next);
+			let data_respone = await Helper.onCreateBookingCRM(data_booking_crm, req, res, next);
 			console.log('FINISH HELPER CREATE');
 			let { code, data, error } = data_respone;
 
@@ -215,8 +213,17 @@ const CustomerFeatureController = {
 			        Authorization: `Zoho-oauthtoken ${accessToken.access_token}`,
 			    },
 			};
+
 			const response = await fetch(url, options).catch(err => {return res.status(500).json({status: false, message: err})});
 			const data = await response.json();
+
+			buildProdLogger('info', 'DataCRM/data.log').info(
+				`
+				--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+				--- Data: ${JSON.stringify(data)}
+				`,
+			);
+			
 			if (!data) {
 				return res.status(500).json({
 					status: false,
