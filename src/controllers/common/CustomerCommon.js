@@ -1,5 +1,5 @@
 const Customers = require('../../models/customer/Customer');
-const { error_missing_params, error_db_querry } = require('../../config/response/ResponseError');
+const { error_missing_params, error_db_query } = require('../../config/response/ResponseError');
 
 const CustomerCommon = {
     onGetCustomerByID: async (customer_id, res, next) => {
@@ -8,7 +8,7 @@ const CustomerCommon = {
                 where: {
                     customer_id: customer_id,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (customer) {
                 return customer;
@@ -26,7 +26,7 @@ const CustomerCommon = {
                 where: {
                     app_id: customer_id_crm,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (customer) {
                 return customer;
@@ -44,7 +44,7 @@ const CustomerCommon = {
                 where: {
                     customer_id_crm: customer_id_crm,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (customer) {
                 return customer;
@@ -62,7 +62,7 @@ const CustomerCommon = {
                 where: {
                     phone: phone,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (customer) {
                 return customer;
@@ -80,7 +80,7 @@ const CustomerCommon = {
                 where: {
                     email: email,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (customer) {
                 return customer;
@@ -96,7 +96,7 @@ const CustomerCommon = {
         try {
             const customers = await Customers.findAll({
                 attributes: { exclude: ['password'] },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             return customers;
         } catch (err) {

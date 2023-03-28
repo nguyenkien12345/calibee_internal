@@ -1,6 +1,6 @@
 const Bookings = require('../../models/booking/Booking');
 const BookingDetails = require('../../models/booking/BookingDetail');
-const { error_db_querry, onBuildResponseErr } = require('../../config/response/ResponseError');
+const { error_db_query } = require('../../config/response/ResponseError');
 
 const BookingCommon = {
     // +++++ Booking common +++++ //
@@ -11,7 +11,7 @@ const BookingCommon = {
                 where: {
                     booking_id: booking_id,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (booking) {
                 return booking;
@@ -30,7 +30,7 @@ const BookingCommon = {
                 where: {
                     app_id: booking_id_crm,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (booking) {
                 return booking;
@@ -50,7 +50,7 @@ const BookingCommon = {
                 where: {
                     booking_id: booking_id,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (booking) {
                 return booking;

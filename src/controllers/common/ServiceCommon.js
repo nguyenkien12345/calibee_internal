@@ -1,5 +1,5 @@
 const ServiceCategories = require('../../models/service/ServiceCategory');
-const { error_db_querry, onBuildResponseErr } = require('../../config/response/ResponseError');
+const { error_db_query, onBuildResponseErr } = require('../../config/response/ResponseError');
 
 const ServiceCommon = {
     // +++++ Service category common +++++ //
@@ -10,7 +10,7 @@ const ServiceCommon = {
                 where: {
                     service_category_id: service_category_id,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (service_category) {
                 return service_category;
@@ -29,7 +29,7 @@ const ServiceCommon = {
                 where: {
                     app_id: service_category_id_crm,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (service_category) {
                 return service_category;

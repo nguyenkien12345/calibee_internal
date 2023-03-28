@@ -31,151 +31,6 @@ const WorkerController = {
         }
     },
 
-    getAllWorkerCRM: async (req, res, next) => {
-        try {
-            let workers_crm = await WorkerCRMCommon.onGetAllWorker(req, res, next);
-            return res.status(200).json({
-                ...successCallBack,
-                data: {
-                    length: workers_crm.data.data.length,
-                    workers_crm: workers_crm.data.data,
-                },
-            });
-        } catch (err) {
-            next(err);
-        }
-    },
-
-    registerCRM: async (req, res, next) => {
-        try {
-            const { name, phone, nid, address, skills, working_area, worker_id } = req.body;
-
-            if (!name) return res.status(400).json(error_missing_params('name'));
-            if (!phone) return res.status(400).json(error_missing_params('phone'));
-            if (!skills) return res.status(400).json(error_missing_params('skills'));
-            if (!working_area) return res.status(400).json(error_missing_params('working_area'));
-            if (!worker_id) return res.status(400).json(error_missing_params('worker_id'));
-
-            let cities_data = await CallAPICommon.getAllCities();
-            let skills_data = await CallAPICommon.getAllSkills();
-            let result_cities = [];
-            let result_skills = [];
-            result_cities = JSON.parse(cities_data.data).data.cities;
-            result_skills = JSON.parse(skills_data.data).data.skills;
-
-            let cityData = result_cities.find((x) => x.city_id.toString() === working_area.toString());
-            let skillData = [];
-
-            let skillArray = skills.split(',');
-            for (let i = 0; i < skillArray.length; i++) {
-                let skill = result_skills.find((x) => x.skill_id.toString() === skillArray[i].toString());
-                skillData.push(skill);
-            }
-
-            let Registered_Works = skillData.map((x) => x.skill_name);
-
-            let worker_crm = {
-                Lead_Name: name.toUpperCase(),
-                Mobile: phone.replace('0', '+84'),
-                Email: '',
-                Gender: '',
-                Lead_Source: 'App',
-                Lead_Status: 'Capturing',
-                Nid: nid ? nid : '',
-                Address: address ? address : '',
-                Registered_Works: Registered_Works,
-                City_Province: cityData.name,
-                App_ID: worker_id,
-                Worker_ID: nid,
-            };
-
-            let data_worker_crm = await WorkerCRMCommon.onRegisterCRM(worker_crm, next);
-            buildProdLogger('info', 'register_crm_worker_information.log').info(
-                `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
-				--- Method: ${req.method} --- Controller: WorkerController
-				--- Message: ${phone} register crm worker information --- Data: ${JSON.stringify(data_worker_crm)}`,
-            );
-
-            let { code, data, error } = data_worker_crm.data;
-            if (code === 3000 && data) {
-                buildProdLogger('info', 'register_crm_worker_success.log').info(
-                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
-					--- Method: ${req.method} --- Controller: WorkerController
-					--- Message: ${phone} registered crm successfully --- Data: ${JSON.stringify(data)}`,
-                );
-                return res.status(200).json({
-                    ...successCallBack,
-                    data: data,
-                    user: worker_crm,
-                });
-            } else {
-                buildProdLogger('error', 'register_crm_worker_fail.log').error(
-                    `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
-					--- Method: ${req.method} --- Controller: WorkerController
-					--- Message: ${phone} registered crm failure --- Error: ${JSON.stringify(error)}`,
-                );
-                return res.json({
-                    ...errorCallBackWithOutParams,
-                    error: error,
-                });
-            }
-        } catch (err) {
-            next(err);
-        }
-    },
-
-    updateCRM: async (req, res, next) => {
-        try {
-            const zohoId = req.body.zohoId;
-            if (!zohoId) {
-                return res.status(400).json(error_missing_params('zohoId'));
-            }
-
-            let { email, working_area } = req.body;
-
-            let cities_data = await CallAPICommon.getAllCities();
-            let result_cities = [];
-            result_cities = JSON.parse(cities_data.data).data.cities;
-            let cityData = result_cities.find((x) => x.city_id.toString() === working_area.toString());
-
-            let worker = await WorkerCRMCommon.onGetDetailWorker(zohoId, res, next);
-            if (worker.data.code === 3100) {
-                return res.json(onBuildResponseErr('error_not_found_user'));
-            } else if (worker.data.code === 3000 && worker.data.data) {
-                working_area = cityData.name;
-                let updatedworker = {
-                    Email: email ? email : worker.data.data.Email,
-                    City_Province: working_area ? working_area : worker.data.data.City_Province,
-                };
-                let data_worker_crm = await WorkerCRMCommon.onUpdateCRM(zohoId, updatedworker, next);
-                let { code, data, error } = data_worker_crm.data;
-                if (code === 3000 && data) {
-                    buildProdLogger('info', 'update_crm_worker_success.log').info(
-                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
-						--- Method: ${req.method} --- Controller: WorkerController
-						--- Message: ${zohoId} updated crm successfully --- Data: ${JSON.stringify(data)}`,
-                    );
-                    return res.status(200).json({
-                        ...successCallBack,
-                        data: data,
-                    });
-                } else {
-                    buildProdLogger('error', 'update_crm_worker_fail.log').error(
-                        `Hostname: ${req.hostname} --- Ip: ${req.ip} --- Router: ${req.url} 
-						--- Method: ${req.method} --- Controller: WorkerController
-						--- Message: ${zohoId} updated crm failure --- Error: ${JSON.stringify(error)}`,
-                    );
-                    return res.json({
-                        ...errorCallBackWithOutParams,
-                        error: error,
-                    });
-                }
-            }
-        } catch (err) {
-            next(err);
-        }
-    },
-
     CRMregister: async (req, res, next) => {
         try {
             const { name, phone, password, nid, address, skills, working_place, working_area, app_id } = req.body;
@@ -263,7 +118,7 @@ const WorkerController = {
                 avatar: '',
                 referral_code: referral_code,
                 worker_id_crm: '',
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
             const new_access_token = AuthenHelper.generateAccessTokenWorker(worker.id, worker.phone);
 
             let { password: password_user, createdAt, updatedAt, ...other } = worker.dataValues;
@@ -283,33 +138,6 @@ const WorkerController = {
                     user: { ...other },
                 },
             });
-        } catch (err) {
-            next(err);
-        }
-    },
-
-    getDetailInfoBank: async (req, res, next) => {
-        try {
-            let worker_id = req.body.worker_id;
-
-            if (!worker_id) return res.status(400).json(error_missing_params('worker_id'));
-
-            let worker = await WorkerCRMCommon.getDetailInfoBank(worker_id);
-
-            if (worker.data.code === 3100) {
-                return res.json(onBuildResponseErr('error_not_found_user'));
-            } else if (worker.data.code === 3000 && worker.data.data) {
-                let infoAccount = {
-                    accountNumber: worker.data.data[0].Account_Number,
-                    bankName: worker.data.data[0].Bank_Name,
-                };
-                return res.status(200).json({
-                    ...successCallBack,
-                    data: {
-                        ...infoAccount,
-                    },
-                });
-            }
         } catch (err) {
             next(err);
         }

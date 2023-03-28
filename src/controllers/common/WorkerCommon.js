@@ -7,7 +7,7 @@ const WorkerCommon = {
                 where: {
                     worker_id: worker_id,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (worker) {
                 return worker;
@@ -26,7 +26,7 @@ const WorkerCommon = {
                 where: {
                     app_id: worker_id_crm,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (worker) {
                 return worker;
@@ -45,7 +45,7 @@ const WorkerCommon = {
                 where: {
                     phone: phone,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (worker) {
                 return worker;
@@ -63,7 +63,7 @@ const WorkerCommon = {
                 where: {
                     nid: nid,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (worker) {
                 return worker;
@@ -81,7 +81,7 @@ const WorkerCommon = {
                 where: {
                     referral_code: referral_code,
                 },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             if (worker) {
                 return worker;
@@ -97,7 +97,7 @@ const WorkerCommon = {
         try {
             const workers = await Workers.findAll({
                 attributes: { exclude: ['password'] },
-            }).catch((err) => res.json(error_db_querry(err)));
+            }).catch((err) => res.json(error_db_query(err)));
 
             return workers;
         } catch (err) {

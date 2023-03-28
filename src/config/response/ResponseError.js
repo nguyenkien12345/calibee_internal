@@ -23,7 +23,7 @@ const errorCallBack = (err) => {
     };
 };
 
-const error_db_querry = (err) => {
+const error_db_query = (err) => {
     return {
         status: false,
         err_code: 50001,
@@ -72,7 +72,7 @@ module.exports = {
     onBuildResponseErr,
     errorCallBackWithOutParams,
     errorCallBack,
-    error_db_querry,
+    error_db_query,
     error_missing_params,
     error_security,
     unauthorized_access,

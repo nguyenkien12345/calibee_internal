@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const Customers = require('../../models/customer/Customer');
 const Workers = require('../../models/worker/Worker');
-const { error_db_querry, onBuildResponseErr } = require('../../config/response/ResponseError');
+const { error_db_query, onBuildResponseErr } = require('../../config/response/ResponseError');
 const { diffInMinutes } = require('../datetime');
 
 dotenv.config();
@@ -59,7 +59,7 @@ const AuthenHelper = {
     onCheckPhoneExistOnTable: async (res, phone, tableName) => {
         if (tableName === 'CUSTOMER') {
             let customer = await Customers.findOne({ where: { phone: phone } }).catch((err) =>
-                res.json(error_db_querry(err)),
+                res.json(error_db_query(err)),
             );
             if (!customer) {
                 return false;
@@ -68,7 +68,7 @@ const AuthenHelper = {
             }
         } else if (tableName === 'WORKER') {
             let worker = await Workers.findOne({ where: { phone: phone } }).catch((err) =>
-                res.json(error_db_querry(err)),
+                res.json(error_db_query(err)),
             );
             if (!worker) {
                 return false;
@@ -81,7 +81,7 @@ const AuthenHelper = {
     onCheckNidExistOnTable: async (res, nid, tableName) => {
         if (tableName === 'CUSTOMER') {
             let customer = await Customers.findOne({ where: { nid: nid } }).catch((err) =>
-                res.json(error_db_querry(err)),
+                res.json(error_db_query(err)),
             );
             if (!customer) {
                 return false;
@@ -89,7 +89,7 @@ const AuthenHelper = {
                 return true;
             }
         } else if (tableName === 'WORKER') {
-            let worker = await Workers.findOne({ where: { nid: nid } }).catch((err) => res.json(error_db_querry(err)));
+            let worker = await Workers.findOne({ where: { nid: nid } }).catch((err) => res.json(error_db_query(err)));
             if (!worker) {
                 return false;
             } else {
@@ -101,7 +101,7 @@ const AuthenHelper = {
     onCheckEmailExistOnTable: async (res, email, tableName) => {
         if (tableName === 'CUSTOMER') {
             let customer = await Customers.findOne({ where: { email: email } }).catch((err) =>
-                res.json(error_db_querry(err)),
+                res.json(error_db_query(err)),
             );
             if (!customer) {
                 return false;
@@ -110,7 +110,7 @@ const AuthenHelper = {
             }
         } else if (tableName === 'WORKER') {
             let worker = await Workers.findOne({ where: { email: email } }).catch((err) =>
-                res.json(error_db_querry(err)),
+                res.json(error_db_query(err)),
             );
             if (!worker) {
                 return false;
@@ -126,7 +126,7 @@ const AuthenHelper = {
             if (minutes > 60) {
                 await otp_object
                     .update({ verify_count: 0, locked_at: null })
-                    .catch((err) => res.json(error_db_querry(err)));
+                    .catch((err) => res.json(error_db_query(err)));
                 return null;
             } else {
                 return {
