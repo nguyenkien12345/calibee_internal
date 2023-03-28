@@ -12,7 +12,7 @@ const getRefreshToken = async (booking_id, name_action) => {
     };
     const response = await fetch(url, options);
     const data = await response.json();
-    if (data !== null) {
+	if (data && data.access_token) {
 		buildProdLogger('info', 'DataCRM/getRefreshToken_success.log').info(
 			`
 			--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
@@ -22,10 +22,10 @@ const getRefreshToken = async (booking_id, name_action) => {
 			--- data.access_token: ${data.access_token}
 			`,
 		);
-        return {
+		return {
             access_token: data.access_token,
         };
-    } else {
+	} else {
 		buildProdLogger('info', 'DataCRM/getRefreshToken_failed.log').info(
 			`
 			--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
@@ -34,10 +34,10 @@ const getRefreshToken = async (booking_id, name_action) => {
 			--- data: ${JSON.stringify(data)}
 			`,
 		);
-        return {
+		return {
             access_token: null,
         };
-    }
+	};
 };
 
 module.exports = { getRefreshToken };

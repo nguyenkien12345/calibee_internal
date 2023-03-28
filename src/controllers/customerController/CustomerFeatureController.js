@@ -1,12 +1,12 @@
-const dotenv = require('dotenv');
 const moment = require('moment');
+const dotenv = require('dotenv');
 const fetch = require('node-fetch');
 const FormData = require('form-data');
 dotenv.config();
 
-const { buildProdLogger } = require('../../logger/index');
-
 const AppConfigs = require('../../models/config/AppConfig');
+
+const { buildProdLogger } = require('../../logger/index');
 const { getRefreshToken } = require('../../config/oauthCRM');
 const { error_missing_params } = require('../../config/response/ResponseError');
 
