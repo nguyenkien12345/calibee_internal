@@ -1,5 +1,4 @@
 const CustomerRouter = require('express').Router();
-const CustomerController = require('../../controllers/customerController/CustomerController');
 const CustomerFeatureController = require('../../controllers/customerController/CustomerFeatureController');
 const security = require('../../middleware/security');
 

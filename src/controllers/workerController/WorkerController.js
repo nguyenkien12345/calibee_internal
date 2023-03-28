@@ -1,7 +1,6 @@
 const dotenv = require('dotenv');
 const Workers = require('../../models/worker/Worker');
 const WorkerCommon = require('../common/WorkerCommon');
-const WorkerCRMCommon = require('../common/WorkerCRMCommon');
 const CallAPICommon = require('../../callAPI/Common/index');
 const { successCallBack } = require('../../config/response/ResponseSuccess');
 const {
