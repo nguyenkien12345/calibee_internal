@@ -332,6 +332,7 @@ const BookingController = {
 					buildProdLogger('info', 'DataCRM/create_job.log').info(
 						`
 						--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+						--- Job_ID: ${Job_ID}
 						--- Booking_ID: ${Booking_ID}
 						--- data: ${JSON.stringify(data)}
 						--- access_token_crm: ${access_token_crm}
@@ -351,6 +352,7 @@ const BookingController = {
 					buildProdLogger('info', 'DataCRM/create_job.log').info(
 						`
 						--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+						--- Job_ID: ${Job_ID}
 						--- Booking_ID: ${Booking_ID}
 						--- data: ${JSON.stringify(data)}
 						--- access_token_crm: ${access_token_crm}
@@ -451,6 +453,7 @@ const BookingController = {
 					buildProdLogger('info', 'DataCRM/update_job.log').info(
 						`
 						--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+						--- Job_ID: ${Job_ID}
 						--- Booking_ID: ${Booking_ID}
 						--- data: ${JSON.stringify(data)}
 						--- access_token_crm: ${access_token_crm}
@@ -470,6 +473,8 @@ const BookingController = {
 					buildProdLogger('info', 'DataCRM/data_not_1030.log').info(
 						`
 						--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+						--- Job_ID: ${Job_ID}
+						--- Booking_ID: ${Booking_ID}
 						--- data: ${JSON.stringify(data)}
 						--- access_token_crm: ${access_token_crm.value}
 						--- run_while: ${run_while}
