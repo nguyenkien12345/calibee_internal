@@ -85,9 +85,10 @@ const CustomerFeatureController = {
 				data = await response.json();
 
 				if (data.code == 1030) {
-					buildProdLogger('info', 'DataCRM/data_is_1030.log').info(
+					buildProdLogger('info', 'DataCRM/create_booking.log').info(
 						`
 						--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+						--- Booking_ID: ${Booking_ID}
 						--- data: ${JSON.stringify(data)}
 						--- access_token_crm.value: ${access_token_crm.value}
 						--- check_failed: ${check_failed}
@@ -102,9 +103,10 @@ const CustomerFeatureController = {
 					await access_token_crm.save();
 				} else {
 					check_failed = false;
-					buildProdLogger('info', 'DataCRM/data_not_1030.log').info(
+					buildProdLogger('info', 'DataCRM/create_booking.log').info(
 						`
 						--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+						--- Booking_ID: ${Booking_ID}
 						--- data: ${JSON.stringify(data)}
 						--- access_token_crm.value: ${access_token_crm.value}
 						--- check_failed: ${check_failed}
