@@ -4,13 +4,13 @@ const fetch = require('node-fetch');
 const FormData = require('form-data');
 dotenv.config();
 
-const AppConfigs = require('../../models/config/AppConfig');
-
 const { buildProdLogger } = require('../../logger/index');
 const { getRefreshToken } = require('../../config/oauthCRM');
 const { error_missing_params } = require('../../config/response/ResponseError');
 
 const base_url = process.env.BASE_URL_CREATOR_ZOHO;
+
+let access_token_crm = null;
 
 const CustomerFeatureController = {
 
@@ -66,19 +66,15 @@ const CustomerFeatureController = {
 
 			const url = `${base_url}/${environment}/form/Bookings1`;
 
-			let check_failed = true;
+			let run_while = true;
+			let count = 0;
 			let data = null;
-			while (check_failed) {
-				let access_token_crm = await AppConfigs.findOne({
-					where: {
-						name: 'access_token_crm'
-					}
-				});
+			while (run_while) {
 				const options = {
 					method: 'POST',
 					body: formData,
 					headers: {
-						Authorization: `Zoho-oauthtoken ${access_token_crm.value}`,
+						Authorization: `Zoho-oauthtoken ${access_token_crm}`,
 					},
 				};
 				const response = await fetch(url, options).catch(err => {return res.status(500).json({status: false, message: err})});
@@ -90,8 +86,8 @@ const CustomerFeatureController = {
 						--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
 						--- Booking_ID: ${Booking_ID}
 						--- data: ${JSON.stringify(data)}
-						--- access_token_crm.value: ${access_token_crm.value}
-						--- check_failed: ${check_failed}
+						--- access_token_crm: ${access_token_crm}
+						--- run_while: ${run_while}
 						`,
 					);
 
@@ -99,20 +95,25 @@ const CustomerFeatureController = {
 					.then((data) => Promise.resolve(data))
 					.catch((err) => Promise.reject(err));
 
-					access_token_crm.value = accessToken.access_token
-					await access_token_crm.save();
+					access_token_crm = accessToken.access_token;
+					count = count + 1;
+
 				} else {
-					check_failed = false;
+					run_while = false;
 					buildProdLogger('info', 'DataCRM/create_booking.log').info(
 						`
 						--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
 						--- Booking_ID: ${Booking_ID}
 						--- data: ${JSON.stringify(data)}
-						--- access_token_crm.value: ${access_token_crm.value}
-						--- check_failed: ${check_failed}
+						--- access_token_crm: ${access_token_crm}
+						--- run_while: ${run_while}
 						`,
 					);
-				}
+				};
+
+				if (count == 3) {
+					run_while = false;
+				};
 			};
 
 			if (!data) {
@@ -191,16 +192,11 @@ const CustomerFeatureController = {
 			}
 
 
-			let check_failed = true;
+			let run_while = true;
+			let count = 0
 			let data = null;
 
-			while (check_failed) {
-				let access_token_crm = await AppConfigs.findOne({
-					where: {
-						name: 'access_token_crm'
-					}
-				});
-
+			while (run_while) {
 				const options = {
 					method: 'PATCH',
 					body: JSON.stringify({
@@ -210,19 +206,20 @@ const CustomerFeatureController = {
 					}),
 					headers: {
 						'Content-Type': 'application/json',
-						Authorization: `Zoho-oauthtoken ${access_token_crm.value}`,
+						Authorization: `Zoho-oauthtoken ${access_token_crm}`,
 					},
 				};
 				const response = await fetch(url, options).catch(err => {return res.status(500).json({status: false, message: err})});
 				data = await response.json();
 
 				if (data.code == 1030) {
-					buildProdLogger('info', 'DataCRM/data_is_1030.log').info(
+					buildProdLogger('info', 'DataCRM/update_booking.log').info(
 						`
 						--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+						--- Booking_ID: ${Booking_ID}
 						--- data: ${JSON.stringify(data)}
-						--- access_token_crm.value: ${access_token_crm.value}
-						--- check_failed: ${check_failed}
+						--- access_token_crm: ${access_token_crm}
+						--- run_while: ${run_while}
 						`,
 					);
 
@@ -230,18 +227,24 @@ const CustomerFeatureController = {
 					.then((data) => Promise.resolve(data))
 					.catch((err) => Promise.reject(err));
 
-					access_token_crm.value = accessToken.access_token
-					await access_token_crm.save();
+					access_token_crm = accessToken.access_token;
+					count = count + 1;
+
 				} else {
-					check_failed = false;
-					buildProdLogger('info', 'DataCRM/data_not_1030.log').info(
+					run_while = false;
+					buildProdLogger('info', 'DataCRM/update_booking.log').info(
 						`
 						--- NowTime: ${moment().add(7,'hours').format('YYYY-MM-DD HH:mm:ss')}
+						--- Booking_ID: ${Booking_ID}
 						--- data: ${JSON.stringify(data)}
-						--- access_token_crm.value: ${access_token_crm.value}
-						--- check_failed: ${check_failed}
+						--- access_token_crm: ${access_token_crm}
+						--- run_while: ${run_while}
 						`,
 					);
+				};
+
+				if (count == 3) {
+					run_while = false;
 				};
 			};
 
