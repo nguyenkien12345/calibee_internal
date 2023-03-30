@@ -222,6 +222,10 @@ const Booking = sequelize.define(
             type: DataTypes.STRING(10),
             allowNull: true,
         },
+        admin_fee: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
     },
     {
         paranoid: true,
