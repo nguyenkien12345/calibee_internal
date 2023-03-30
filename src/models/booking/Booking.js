@@ -224,7 +224,7 @@ const Booking = sequelize.define(
         },
         admin_fee: {
             type: DataTypes.INTEGER,
-            allowNull: true,
+            defaultValue: 0,
         },
     },
     {
