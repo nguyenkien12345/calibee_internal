@@ -190,7 +190,6 @@ const BookingController = {
 				url = `${base_url}/${environment}/report/All_Bookings1/${App_Id_Booking}`;
 			}
 
-
 			let run_while = true;
 			let count = 0
 			let data = null;
