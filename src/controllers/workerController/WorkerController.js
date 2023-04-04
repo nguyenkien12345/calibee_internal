@@ -11,7 +11,6 @@ const {
 } = require('../../config/response/ResponseError');
 const AuthenHelper = require('../../helpers/authen');
 const { onMakeid } = require('../../helpers/generate');
-const { buildProdLogger } = require('../../logger/index');
 
 dotenv.config();
 
