@@ -1,29 +1,22 @@
+const moment = require('moment');
 const dotenv = require('dotenv');
-const { buildProdLogger } = require('../../logger/index');
-
-let access_token_crm = null;
-
-const CustomerCommon = require('../common/CustomerCommon');
-const CustomerCRMCommon = require('../common/CustomerCRMCommon');
-const ServiceCommon = require('../common/ServiceCommon');
-const BookingCommon = require('../common/BookingCommon');
-const WorkerCommon = require('../common/WorkerCommon');
-const { successCallBack } = require('../../config/response/ResponseSuccess');
-const Bookings = require('../../models/booking/Booking');
-const BookingDetails = require('../../models/booking/BookingDetail');
-const Attendances = require('../../models/booking/Attendance');
 const fetch = require('node-fetch');
+const FormData = require('form-data');
+dotenv.config();
+
+const BookingCommon = require('../common/BookingCommon');
+
+const { buildProdLogger } = require('../../logger/index');
+const { getRefreshToken } = require('../../config/oauthCRM');
+
 const {
-    error_db_querry,
-    errorCallBackWithOutParams,
+	errorCallBackWithOutParams,
     error_missing_params,
     onBuildResponseErr,
 } = require('../../config/response/ResponseError');
-const { getRefreshToken } = require('../../config/oauthCRM');
-const moment = require('moment');
-const FormData = require('form-data');
+const { successCallBack } = require('../../config/response/ResponseSuccess');
 
-dotenv.config();
+let access_token_crm = null;
 
 const base_url = process.env.BASE_URL_CREATOR_ZOHO;
 

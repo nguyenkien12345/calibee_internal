@@ -226,6 +226,10 @@ const Booking = sequelize.define(
             type: DataTypes.INTEGER,
             defaultValue: 0,
         },
+		show_on_admin: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: true,
+        },
     },
     {
         paranoid: true,
