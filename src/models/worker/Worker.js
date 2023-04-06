@@ -142,6 +142,10 @@ const Workers = sequelize.define(
 			allowNull: false,
 			unique: false,
         },
+		grade: {
+			type: DataTypes.INTEGER.UNSIGNED,
+			allowNull: true,
+		}
     },
     {
         paranoid: true,
