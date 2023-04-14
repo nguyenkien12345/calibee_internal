@@ -2,7 +2,6 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
 const bcrypt = require('bcrypt');
 const Bookings = require('../../models/booking/Booking');
-const CustomerCares = require('../../models/customer/CustomerCare');
 
 const Customer = sequelize.define(
     'customer',
@@ -135,11 +134,6 @@ Bookings.belongsTo(Customer, {
 // Customer (1 -> n) CustomerCare
 Customer.hasMany(CustomerCares, {
     as: 'customer_cares',
-    foreignKey: 'customer_id',
-});
-
-CustomerCares.belongsTo(Customer, {
-    as: 'customer',
     foreignKey: 'customer_id',
 });
 

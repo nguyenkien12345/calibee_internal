@@ -1,8 +1,4 @@
 const { DataTypes } = require('sequelize');
-const Attendance = require('./Attendance');
-const BookingHistories = require('./BookingHistory');
-const Feedbacks = require('../../models/feedback/Feedback');
-const CancelHistories = require('../../models/worker/CancelHistory');
 const sequelize = require('../../config/database');
 
 const BookingDetail = sequelize.define(
@@ -113,49 +109,5 @@ const BookingDetail = sequelize.define(
         collate: 'utf8mb4_general_ci',
     },
 );
-
-// BookingDetail (1 -> n) Attendance
-BookingDetail.hasMany(Attendance, {
-    as: 'booking_detail_attendance',
-    foreignKey: 'booking_detail_id',
-});
-
-Attendance.belongsTo(BookingDetail, {
-    as: 'attendance_booking_detail',
-    foreignKey: 'booking_detail_id',
-});
-
-// Booking Detail (1 -> 2) Feedback
-BookingDetail.hasMany(Feedbacks, {
-    as: 'booking_detail_feedbacks',
-    foreignKey: 'booking_detail_id',
-});
-
-Feedbacks.belongsTo(BookingDetail, {
-    as: 'feedbacks_booking_detail',
-    foreignKey: 'booking_detail_id',
-});
-
-// Booking Detail (1 -> 1) Booking History
-BookingDetail.hasOne(BookingHistories, {
-    as: 'detail_to_history',
-    foreignKey: 'booking_detail_id',
-});
-
-BookingHistories.belongsTo(BookingDetail, {
-    as: 'history_to_detail',
-    foreignKey: 'booking_detail_id',
-});
-
-// // Booking Detail (1 -> 2) Cancel_booking
-// BookingDetail.hasMany(CancelHistories, {
-//     as: 'booking_detail_cancel_histories',
-//     foreignKey: 'booking_detail_id',
-// });
-
-// CancelHistories.belongsTo(BookingDetail, {
-//     as: 'cancel_history_booking_detail',
-//     foreignKey: 'booking_detail_id',
-// });
 
 module.exports = BookingDetail;
