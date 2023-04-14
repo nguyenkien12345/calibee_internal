@@ -9,8 +9,12 @@ const Attendance = sequelize.define(
             primaryKey: true,
             autoIncrement: true,
         },
-        booking_detail_id: {
+		booking_id: {
             type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: false,
+        },
+        booking_detail_id: {
+            type: DataTypes.STRING(50),
             allowNull: true,
         },
         working_day: {
@@ -28,6 +32,7 @@ const Attendance = sequelize.define(
         status: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
+            defaultValue: 0,
         },
         number_job: {
             type: DataTypes.INTEGER,
@@ -43,7 +48,7 @@ const Attendance = sequelize.define(
             defaultValue: null,
         },
         worker_id: {
-            type: DataTypes.INTEGER.UNSIGNED,
+            type: DataTypes.INTEGER,
             allowNull: true,
         },
         in_lat: {

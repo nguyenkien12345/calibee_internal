@@ -1,6 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
 const bcrypt = require('bcrypt');
+const Bookings = require('../../models/booking/Booking');
+const CustomerCares = require('../../models/customer/CustomerCare');
 
 const Customer = sequelize.define(
     'customer',
@@ -105,10 +107,10 @@ const Customer = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             defaultValue: 0,
         },
-		ref_code: {
+        ref_code: {
             type: DataTypes.STRING(100),
-			allowNull: false,
-			unique: false,
+            allowNull: false,
+            unique: false,
         },
     },
     {
@@ -117,6 +119,29 @@ const Customer = sequelize.define(
         collate: 'utf8mb4_general_ci',
     },
 );
+
+// Customer (1 -> n) Bookings
+Customer.hasMany(Bookings, {
+    as: 'bookings',
+    foreignKey: 'customer_id',
+    onDelete: 'CASCADE',
+});
+
+Bookings.belongsTo(Customer, {
+    as: 'customer',
+    foreignKey: 'customer_id',
+});
+
+// Customer (1 -> n) CustomerCare
+Customer.hasMany(CustomerCares, {
+    as: 'customer_cares',
+    foreignKey: 'customer_id',
+});
+
+CustomerCares.belongsTo(Customer, {
+    as: 'customer',
+    foreignKey: 'customer_id',
+});
 
 Customer.beforeCreate(async (customer) => {
     if (customer.password) {

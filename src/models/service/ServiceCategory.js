@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
+const OtherServices = require('../../models/service/OtherService');
+const CustomerCares = require('../../models/customer/CustomerCare');
 const Bookings = require('../../models/booking/Booking');
 
 const ServiceCategory = sequelize.define('service_category', {
@@ -40,6 +42,28 @@ const ServiceCategory = sequelize.define('service_category', {
         type: DataTypes.INTEGER,
         defaultValue: 0,
     },
+});
+
+// Service Category (1 -> n) Other Service
+ServiceCategory.hasMany(OtherServices, {
+    as: 'service_category_other_services',
+    foreignKey: 'service_category_id',
+});
+
+OtherServices.belongsTo(ServiceCategory, {
+    as: 'other_services_service_category',
+    foreignKey: 'service_category_id',
+});
+
+// Service Category (1 -> n) Customer Care
+ServiceCategory.hasMany(CustomerCares, {
+    as: 'customer_cares',
+    foreignKey: 'service_category_id',
+});
+
+CustomerCares.belongsTo(ServiceCategory, {
+    as: 'service_category',
+    foreignKey: 'service_category_id',
 });
 
 // Service Category (1 -> n) Booking

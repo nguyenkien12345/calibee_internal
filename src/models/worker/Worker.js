@@ -74,10 +74,6 @@ const Workers = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: true,
         },
-        referral_code: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-        },
         app_id: {
             type: DataTypes.STRING(100),
             allowNull: true,
@@ -109,11 +105,11 @@ const Workers = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
-        accountNumber: {
+        account_number: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        bankName: {
+        bank_name: {
             type: DataTypes.STRING,
             allowNull: true,
         },
@@ -139,7 +135,7 @@ const Workers = sequelize.define(
         },
 		ref_code: {
             type: DataTypes.STRING(100),
-			allowNull: false,
+            allowNull: false,
 			unique: false,
         },
 		grade: {
