@@ -42,18 +42,6 @@ const ServiceCategory = sequelize.define('service_category', {
     },
 });
 
-// Service Category (1 -> n) Other Service
-ServiceCategory.hasMany(OtherServices, {
-    as: 'service_category_other_services',
-    foreignKey: 'service_category_id',
-});
-
-// Service Category (1 -> n) Customer Care
-ServiceCategory.hasMany(CustomerCares, {
-    as: 'customer_cares',
-    foreignKey: 'service_category_id',
-});
-
 // Service Category (1 -> n) Booking
 ServiceCategory.hasMany(Bookings, {
     as: 'bookings',

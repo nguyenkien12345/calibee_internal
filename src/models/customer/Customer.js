@@ -131,12 +131,6 @@ Bookings.belongsTo(Customer, {
     foreignKey: 'customer_id',
 });
 
-// Customer (1 -> n) CustomerCare
-Customer.hasMany(CustomerCares, {
-    as: 'customer_cares',
-    foreignKey: 'customer_id',
-});
-
 Customer.beforeCreate(async (customer) => {
     if (customer.password) {
         customer.password = await bcrypt.hash(customer.password, 10);
