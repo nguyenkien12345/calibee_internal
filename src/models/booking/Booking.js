@@ -15,6 +15,14 @@ const Booking = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
+		status: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: true,
+        },
+		payment_status: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: true,
+        },
         service_category_id: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
@@ -36,7 +44,7 @@ const Booking = sequelize.define(
             allowNull: true,
         },
         note: {
-            type: DataTypes.STRING(100),
+            type: DataTypes.TEXT,
             allowNull: true,
         },
         parent_type_id: {
@@ -84,14 +92,6 @@ const Booking = sequelize.define(
             allowNull: true,
         },
         payment_method_id: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: true,
-        },
-		payment_status: {
-            type: DataTypes.INTEGER.UNSIGNED,
-            allowNull: true,
-        },
-		status: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
@@ -145,10 +145,6 @@ const Booking = sequelize.define(
         },
 		time_key_detail: {
             type: DataTypes.TEXT,
-            allowNull: true,
-        },
-        package_detail: {
-            type: DataTypes.STRING,
             allowNull: true,
         },
         is_test: {
@@ -234,6 +230,10 @@ const Booking = sequelize.define(
             type: DataTypes.STRING(10),
             allowNull: true,
         },
+        commission: {
+            type: DataTypes.INTEGER,
+            defaultValue: 0,
+        },
         admin_fee: {
             type: DataTypes.INTEGER,
             defaultValue: 0,
@@ -258,7 +258,11 @@ const Booking = sequelize.define(
 		current_job: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
-        }
+        },
+		detail_service: {
+			type: DataTypes.TEXT,
+			allowNull: true,
+		}
     },
     {
         paranoid: true,
