@@ -259,6 +259,10 @@ const Booking = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
+        note_service: {
+			type: DataTypes.TEXT,
+            allowNull: true,
+		},
 		detail_service: {
 			type: DataTypes.TEXT,
 			allowNull: true,
