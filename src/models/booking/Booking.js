@@ -1,7 +1,12 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../config/database');
 
+const ChildTypes = require('../../models/category/ChildType');
+const ParentTypes = require('../../models/category/ParentType');
 const BookingDetail = require('../../models/booking/BookingDetail');
+const BookingHistories = require('../../models/booking/BookingHistory');
+const BookingChildTypes = require('../../models/booking/BookingChildType');
+const BookingOtherServices = require('../../models/booking/BookingOtherService');
 
 const Booking = sequelize.define(
     'booking',
@@ -259,12 +264,20 @@ const Booking = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
-        note_service: {
+		note_service: {
 			type: DataTypes.TEXT,
             allowNull: true,
 		},
 		detail_service: {
 			type: DataTypes.TEXT,
+			allowNull: true,
+		},
+		list_images: {
+			type: DataTypes.TEXT,
+			allowNull: true,
+		},
+		visit_charges: {
+			type: DataTypes.INTEGER.UNSIGNED,
 			allowNull: true,
 		}
     },
@@ -285,5 +298,53 @@ BookingDetail.belongsTo(Booking, {
     as: 'booking',
     foreignKey: 'booking_id',
 });
+
+// // Booking Detail (1 -> n) Booking History
+// Booking.hasMany(BookingHistories, {
+//     as: 'booking_to_history',
+//     foreignKey: 'booking_id',
+// });
+
+// BookingHistories.belongsTo(Booking, {
+//     as: 'history_to_booking',
+//     foreignKey: 'booking_id',
+// });
+
+// // Booking (n -> n) Child Type => through: Booking Child Type
+// Booking.belongsToMany(ChildTypes, {
+//     as: 'booking_child_types',
+//     through: BookingChildTypes,
+//     foreignKey: 'booking_id',
+//     otherkey: 'child_type_id',
+// });
+
+// ChildTypes.belongsToMany(Booking, {
+//     as: 'child_type_bookings',
+//     through: BookingChildTypes,
+//     foreignKey: 'child_type_id',
+//     otherkey: 'booking_id',
+// });
+
+// // Booking (1 -> n) Booking Child Type
+// Booking.hasMany(BookingChildTypes, {
+//     as: 'booking_booking_child_types',
+//     foreignKey: 'booking_id',
+// });
+
+// BookingChildTypes.belongsTo(Booking, {
+//     as: 'booking_child_type_booking',
+//     foreignKey: 'booking_id',
+// });
+
+// // Child Type (1 -> n) Booking Child Type
+// ChildTypes.hasMany(BookingChildTypes, {
+//     as: 'booking_booking_child_types',
+//     foreignKey: 'child_type_id',
+// });
+
+// BookingChildTypes.belongsTo(ChildTypes, {
+//     as: 'booking_child_type_child_type',
+//     foreignKey: 'child_type_id',
+// });
 
 module.exports = Booking;
