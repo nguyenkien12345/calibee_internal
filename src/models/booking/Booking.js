@@ -20,11 +20,11 @@ const Booking = sequelize.define(
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
-		status: {
+        status: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
-		payment_status: {
+        payment_status: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
@@ -148,7 +148,7 @@ const Booking = sequelize.define(
             type: DataTypes.TEXT,
             allowNull: true,
         },
-		time_key_detail: {
+        time_key_detail: {
             type: DataTypes.TEXT,
             allowNull: true,
         },
@@ -248,37 +248,45 @@ const Booking = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: true,
         },
-		creator_id: {
-			type: DataTypes.INTEGER,
-			allowNull: true
-		},
-		shift_detail_fee: {
+        creator_id: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        shift_detail_fee: {
             type: DataTypes.TEXT,
             allowNull: true,
         },
-		payment_bills: {
+        payment_bills: {
             type: DataTypes.TEXT,
             allowNull: true,
         },
-		current_job: {
+        current_job: {
             type: DataTypes.INTEGER.UNSIGNED,
             allowNull: true,
         },
-		note_service: {
-			type: DataTypes.TEXT,
+        note_service: {
+            type: DataTypes.TEXT,
             allowNull: true,
-		},
-		detail_service: {
-			type: DataTypes.TEXT,
-			allowNull: true,
-		},
-		list_images: {
-			type: DataTypes.TEXT,
-			allowNull: true,
-		},
-		visit_charges: {
-			type: DataTypes.INTEGER.UNSIGNED,
-			allowNull: true,
+        },
+        detail_service: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        list_images: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        visit_charges: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: true,
+        },
+        note_payment: {
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+		district_code: {
+			type: DataTypes.INTEGER,
+            allowNull: true,
 		}
     },
     {
